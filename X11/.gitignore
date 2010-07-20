@@ -1,0 +1,8 @@
+Makefile
+autom4te.cache
+*.o
+config.h
+config.log
+config.status
+configure
+xdaliclock
