@@ -89,6 +89,8 @@ static XrmOptionDescRec options [] = {
   { "-dd/mm/yy",        ".datemode",            XrmoptionNoArg, "DD/MM/YY" },
   { "-seconds",         ".seconds",             XrmoptionNoArg, "True" },
   { "-noseconds",       ".seconds",             XrmoptionNoArg, "False" },
+  { "-hex",       	".hex",             	XrmoptionNoArg, "True" },
+  { "-nohex",       	".hex",             	XrmoptionNoArg, "False" },
   { "-cycle",           ".cycle",               XrmoptionNoArg, "True" },
   { "-nocycle",         ".cycle",               XrmoptionNoArg, "False" },
   { "-font",            ".font",                XrmoptionSepArg, 0 },
@@ -452,6 +454,8 @@ where options include\n\
   -noseconds                    Don't display seconds.\n\
   -cycle                        Do color-cycling.\n\
   -nocycle                      Don't do color-cycling (default).\n\
+  -hex				Display hex time.\n\
+  -nohex			Display decimal time (default).\n\
   -countdown <date>             Display a countdown instead of a clock.\n\
                                 Run `-countdown foo' to see date syntax.\n\
   -display <host:dpy>           The display to run on.\n\
