@@ -1,0 +1,201 @@
+# configure.in --- xdaliclock, Copyright (c) 1999 Jamie Zawinski.
+#
+
+AC_INIT(../numbers2/four2.xbm)
+AC_CONFIG_HEADER(config.h)
+
+echo "current directory: `pwd`"
+echo "command line was: $0 $@"
+
+# After checking to see that --srcdir is correct (which AC_INIT does)
+# check for some random other file that come later in the tar file,
+# to make sure everything is here.
+#
+f=$srcdir/../numbers3/zero3.xbm
+if test \! -r $f ; then
+  echo ""
+  echo "ERROR: The package is incomplete: $f does not exist."
+  echo "       This probably means that your download was truncated."
+  echo ""
+  exit 1
+fi
+
+
+
+###############################################################################
+#
+#       Function to figure out how to run the compiler.
+#
+###############################################################################
+
+AC_DEFUN(AC_PROG_CC_ANSI,
+ [AC_PROG_CC
+
+  if test -z "$GCC"; then
+    AC_MSG_CHECKING(how to request ANSI compilation)
+    case "$host" in
+      *-hpux* )
+        AC_MSG_RESULT(HPUX: adding -Ae)
+        CC="$CC -Ae"
+      ;;
+      *-aix* )
+        AC_MSG_RESULT(AIX: adding -qlanglvl=ansi -qhalt=e)
+        CC="$CC -qlanglvl=ansi -qhalt=e"
+      ;;
+
+      *-dec-* )
+        AC_MSG_RESULT(DEC: adding -std1 -ieee)
+        CC="$CC -std1"
+      ;;
+
+      *)
+        AC_MSG_RESULT(no idea)
+      ;;
+    esac
+  fi
+
+  AC_MSG_CHECKING([whether the compiler works on ANSI C])
+  AC_TRY_RUN([ main(int ac, char **av) { return 0; } ],
+     AC_MSG_RESULT(yes),
+     AC_MSG_RESULT(no)
+     AC_MSG_ERROR(Couldn't build even a trivial ANSI C program: check CC.),
+     AC_MSG_ERROR(Couldn't build even a trivial ANSI C program: check CC.))
+
+  if test -n "$GCC"; then
+    AC_MSG_RESULT(Turning on gcc compiler warnings.)
+    CC="$CC -Wall -Wstrict-prototypes -Wnested-externs -Wno-format"
+  else
+    case "$host" in
+      *-irix5* |*-irix6.[0-3]* )
+        AC_MSG_RESULT(Turning on SGI compiler warnings.)
+        CC="$CC -fullwarn -use_readonly_const -rdata_shared -g3"
+      ;;
+#     *-dec-osf* )
+#       if test -z "$GCC"; then
+#         AC_MSG_RESULT(Turning on DEC C compiler warnings.)
+#         CC="$CC -migrate -w0 -verbose -warnprotos"
+#       fi
+#     ;;
+    esac
+  fi
+])
+
+
+###############################################################################
+#
+#       Functions to figure out how to disable // comments in ANSI C code.
+#
+#       (With recent gcc, this is done with "-std=c89".  With older gcc, this
+#       is done by passing "-lang-c89" to cpp, by passing "-Wp,-lang-c89" to
+#       gcc.  Old gcc doesn't support -std, and new gcc doesn't support -lang.
+#       so much for compatibility!)
+#
+###############################################################################
+
+AC_DEFUN(AC_GCC_ACCEPTS_STD,
+ [if test -n "$GCC"; then
+   AC_CACHE_CHECK([whether gcc accepts -std],
+     ac_cv_gcc_accepts_std,
+    [if ( ( gcc -E -std=c89 - </dev/null >/dev/null ) 2>&1 | \
+          grep unrecognized >/dev/null ); then
+       ac_cv_gcc_accepts_std=no
+     else
+       ac_cv_gcc_accepts_std=yes
+     fi])
+   ac_gcc_accepts_std="$ac_cv_gcc_accepts_std"
+  fi
+])
+
+AC_DEFUN(AC_NO_CPLUSPLUS_COMMENTS_IN_C_CODE,
+ [if test -n "$GCC"; then
+   AC_GCC_ACCEPTS_STD
+   AC_MSG_RESULT(Disabling C++ comments in ANSI C code.)
+   #
+   # The reason that // comments are banned from xscreensaver is that gcc is
+   # basically the only compiler in the world that supports them in C code.
+   # All other vendors support them only in their C++ compilers, not in their
+   # ANSI C compilers.  This means that it's a portability problem: every time
+   # these comments have snuck into the xscreensaver source code, I've gotten
+   # complaints about it the next day.  So we turn off support for them in gcc
+   # as well to prevent them from accidentially slipping in.
+   #
+   if test "$ac_gcc_accepts_std" = yes ; then
+     #
+     # -std=c89 defines __STRICT_ANSI__, which we don't want.
+     # (That appears to be the only additional preprocessor symbol
+     # it defines, in addition to the syntax changes it makes.)
+     #
+     # -std=gnu89 is no good, because // comments were a GNU extension
+     # before they were in the ANSI C 99 spec...  (gcc 2.96 permits //
+     # with -std=gnu89 but not with -std=c89.)
+     #
+     CC="$CC -std=c89 -U__STRICT_ANSI__"
+   else
+     # The old way:
+     CC="$CC -Wp,-lang-c89"
+   fi
+  fi
+])
+
+
+###############################################################################
+
+# Like AC_CHECK_HEADER, but it uses the already-computed -I directories.
+#
+AC_DEFUN(AC_CHECK_X_HEADER, [
+  ac_save_CPPFLAGS="$CPPFLAGS"
+  if test \! -z "$includedir" ; then 
+    CPPFLAGS="$CPPFLAGS -I$includedir"
+  fi
+  CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+  AC_CHECK_HEADER([$1],[$2],[$3],[$4])
+  CPPFLAGS="$ac_save_CPPFLAGS"])
+
+
+###############################################################################
+###############################################################################
+
+
+# random compiler setup
+AC_CANONICAL_HOST
+AC_PROG_CC_ANSI
+AC_NO_CPLUSPLUS_COMMENTS_IN_C_CODE
+AC_PROG_CPP
+AC_C_CONST
+AC_C_INLINE
+AC_EXEEXT
+
+# stuff for Makefiles
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+
+# random libc stuff
+AC_HEADER_STDC
+AC_CHECK_HEADERS(unistd.h)
+AC_HEADER_TIME
+AC_HEADER_SYS_WAIT
+AC_CHECK_FUNCS(select)
+AC_CHECK_HEADERS(sys/select.h)
+
+AC_PATH_XTRA
+
+if test "$have_x" != yes; then
+  AC_MSG_ERROR(Couldn't find X11 headers/libs.  Try \`$0 --help'.)
+fi
+
+AC_CHECK_X_HEADER(X11/extensions/shape.h, [AC_DEFINE(HAVE_SHAPE)])
+
+
+if test \! -z "$includedir" ; then 
+  INCLUDES="$INCLUDES -I$includedir"
+fi
+
+if test \! -z "$libdir" ; then
+  LDFLAGS="$LDFLAGS -L$libdir"
+fi
+
+
+###############################################################################
+
+AC_SUBST(INCLUDES)
+AC_OUTPUT(Makefile)

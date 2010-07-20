@@ -1,0 +1,26 @@
+Begin3
+Title:          xdaliclock
+Version:        2.19
+Entered-date:   11SEP02
+Description:    A morphing digital clock for the X Window System:
+                when a digit changes, it melts into its new shape.
+Keywords:       clock, morph, digital, salvador, X11
+Author:         jwz@jwz.org (Jamie Zawinski)
+Maintained-by:  jwz@jwz.org (Jamie Zawinski)
+Primary-site:   http://www.jwz.org/xdaliclock/
+                156K xdaliclock-2.19.tar.gz
+                6K  xdaliclock.README
+                1K  xdaliclock.lsm
+Alternate-site: sunsite.unc.edu /pub/Linux/X11/clocks/
+                156K xdaliclock-2.19.tar.gz
+                6K  xdaliclock.README
+                1K  xdaliclock.lsm
+Alternate-site: ftp.x.org /contrib/applications/
+                156K xdaliclock-2.19.tar.gz
+                6K  xdaliclock.README
+                1K  xdaliclock.lsm
+Platforms:      Linux, Irix, SunOS, Solaris, HPUX, AIX, FreeBSD, NetBSD,
+                BSDI, SCO, OSF1, Ultrix, NeXT, DG-UX, VMS.
+                Requires X11.
+Copying-policy: BSD
+End

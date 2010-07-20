@@ -1,0 +1,279 @@
+# Makefile.in --- xdaliclock, Copyright (c) 1999 Jamie Zawinski.
+# the `configure' script generates `Makefile' from this file.
+
+@SET_MAKE@
+.SUFFIXES:
+.SUFFIXES: .c .o
+
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+install_prefix	=
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+bindir		= @bindir@
+mandir		= @mandir@
+man1dir		= $(mandir)/man1
+mansuffix	= 1
+
+CC		= @CC@
+CFLAGS		= @CFLAGS@
+LDFLAGS		= @LDFLAGS@
+DEFS		= @DEFS@
+LIBS		= @LIBS@
+
+DEPEND		= makedepend
+DEPEND_FLAGS	= 
+DEPEND_DEFINES	= 
+
+SHELL		= /bin/sh
+INSTALL		= @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA    = $(INSTALL)
+
+X_CFLAGS	= @X_CFLAGS@
+X_LIBS		= @X_LIBS@
+X_PRE_LIBS	= @X_PRE_LIBS@
+X_EXTRA_LIBS	= @X_EXTRA_LIBS@
+
+# Note:
+#
+# X_LIBS would more properly be called X_LDFLAGS (it contains the -L args.)
+# X_PRE_LIBS contains extra libraries you have to link against on some systems,
+#         and that must come before -lX11.  (e.g., -lSM and -lICE.)
+# X_EXTRA_LIBS contains extra libraries needed by X that aren't a part of X.
+#         (e.g., -lsocket, -lnsl, etc.)
+#
+# I think (but am not totally sure) that LIBS is also really "LDFLAGS".
+#
+# CLOCK_LIBS is the link line for "xdaliclock".
+
+
+DEFINES		= $(DEFS)
+INCLUDES	= -I. -I$(srcdir) -I$(srcdir)/.. @INCLUDES@
+NUM_INC		= -I$(srcdir)/../numbers0 -I$(srcdir)/../numbers1 \
+		  -I$(srcdir)/../numbers2 -I$(srcdir)/../numbers3
+
+SRCS		= xdaliclock.c digital.c colors.c resources.c \
+		  visual.c overlay.c hsv.c usleep.c
+OBJS		= xdaliclock.o digital.o colors.o resources.o \
+		  visual.o overlay.o hsv.o usleep.o
+
+CLOCK_LIBS	= $(LIBS) $(X_LIBS) \
+		  $(X_PRE_LIBS) -lXt -lX11 -lXext $(X_EXTRA_LIBS)
+
+TARFILES	= configure configure.in Makefile.in config.h.in \
+		  xdaliclock.man xdaliclock.spec $(SRCS) \
+		  xdaliclock.h resources.h visual.h usleep.h \
+		  hsv.h vroot.h ad2c XDaliClock.ad XDaliClock_ad.h
+
+
+all: xdaliclock
+
+install:   install-program   install-man
+uninstall: uninstall-program uninstall-man
+
+install-strip:
+	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' \
+		install
+
+install-program: xdaliclock
+	$(INSTALL_PROGRAM) xdaliclock $(install_prefix)$(bindir)/xdaliclock
+
+install-man: xdaliclock.man
+	$(INSTALL_DATA) $(srcdir)/xdaliclock.man $(install_prefix)$(man1dir)/xdaliclock.1
+
+uninstall-program:
+	rm -f $(install_prefix)$(bindir)/xdaliclock
+
+uninstall-man:
+	rm -f $(install_prefix)$(man1dir)/xdaliclock.1
+
+clean:
+	-rm -f *.o a.out core xdaliclock XDaliClock_ad.h xdaliclock.hlp
+
+distclean: clean
+	-rm -f config.h Makefile config.status config.cache config.log \
+	  *.bak *.rej TAGS *~ "#"*
+
+# Adds all current dependencies to Makefile
+depend: XDaliClock_ad.h
+	$(DEPEND) -s '# DO NOT DELETE: updated by make depend'		    \
+	$(DEPEND_FLAGS) --						    \
+	$(INCLUDES) $(DEFINES) $(NUM_INC) $(DEPEND_DEFINES) $(CFLAGS)	    \
+	   $(X_CFLAGS) -- $(SRCS)
+
+# Adds some dependencies to Makefile.in -- not totally accurate, but pretty
+# close.  This excludes dependencies on files in /usr/include, etc.  It tries
+# to include only dependencies on files which are themselves a part of this
+# package.
+distdepend: XDaliClock_ad.h
+	@echo updating dependencies in `pwd`/Makefile.in... ;		    \
+	$(DEPEND) -w 0 -f - 						    \
+	-s '# DO NOT DELETE: updated by make distdepend' $(DEPEND_FLAGS) -- \
+	$(INCLUDES) $(DEFINES) $(NUM_INC) $(DEPEND_DEFINES) $(CFLAGS)	    \
+	  $(X_CFLAGS) -- $(SRCS) |					    \
+	(								    \
+	  awk '/^# .*Makefile.in ---/,/^# DO .*distdepend/' < Makefile.in ; \
+	  sed -e 's/^\(#.*\)/\1/'					    \
+	      -e 's@ \./@ @g;s@ /[^ ]*@@g;/^.*:$$/d'			    \
+	      -e 's@ \([^$$]\)@ $$(srcdir)/\1@g'			    \
+	      -e 's@$$.*\(XDaliClock_ad\)@\1@g'				    \
+	      -e 's@ $$(srcdir)/\(.*config\.h\)@ \1@g'			    \
+	      -e 's@^# $$(srcdir)/DO .*@@' ;		 		    \
+	  echo ''							    \
+	) > /tmp/distdepend.$$$$ &&					    \
+	mv Makefile.in Makefile.in.bak &&				    \
+	mv /tmp/distdepend.$$$$ Makefile.in
+
+TAGS: tags
+tags:
+	find $(srcdir) -name '*.[chly]' -print | xargs etags -a
+
+echo_tarfiles:
+	@echo $(TARFILES)
+
+
+
+# How we build object files in this directory.
+.c.o:
+	$(CC) -c $(INCLUDES) $(DEFINES)  $(CFLAGS) $(X_CFLAGS) $<
+
+# digital.c is the only one that takes an extra -D option.
+digital.o: digital.c
+	$(CC) -c $(INCLUDES) $(DEFINES) $(CFLAGS) $(X_CFLAGS) \
+	$(NUM_INC) $(srcdir)/digital.c
+
+
+# How we build the default app-defaults file into the program.
+#
+XDaliClock_ad.h: XDaliClock.ad
+	$(SHELL) $(srcdir)/ad2c $(srcdir)/XDaliClock.ad > XDaliClock_ad.h
+
+# The executables linked in this directory.
+#
+xdaliclock: $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(CLOCK_LIBS)
+
+
+# Rule to build the VMS help file from the Unix man page...
+xdaliclock.hlp: xdaliclock.man
+	@echo building $@... ; \
+	( echo '1 XDALICLOCK' ; \
+	  nroff -mandoc < $< \
+	  | sed -e 's/.//g' -e 's/^ *Page [0-9].*//' \
+		-e 's/^ *XDaliClock(.*//' \
+		-e 's/^     //' \
+		-e 's/^X Version .*//' \
+		-e 's/^NAME.*//;s/^SYNOPSIS//;s/^DESCRIPTION//' \
+		-e 's/\(Copyright\) .*c.*\(1991\)/\1 (C) \2/' \
+		-e 's/^\([A-Z][A-Z]*\) \([A-Z][A-Z]*\)/\1_\2/' \
+		-e 's/^\([A-Z]\)/2 \1/' \
+	  | perl -ne \
+	     '$$a="";while(<>){$$a.=$$_;};$$_=$$a;s/\n\n\n+/\n\n/g; print;'\
+	  | cat ) \
+	  > $@
+
+update_spec_version::
+	@S=xdaliclock.spec ;						    \
+	V=`sed -n 's/.*\([0-9][0-9]*\.[0-9]*\).*/\1/p' < ../version.h` ;    \
+	echo -n "Updating version number in $$S to \"$$V\"... " ;	    \
+	T=/tmp/xs.$$$$ ;						    \
+	sed "s/^\(Version:[^0-9]*\)\(.*\)/\1$$V/"			    \
+	  < $$S > $$T ;							    \
+	if cmp -s $$S $$T ; then					    \
+	  echo "unchanged." ;						    \
+	else								    \
+	  cat $$T > $$S ;						    \
+	  echo "done." ;						    \
+	fi ;								    \
+	rm $$T
+
+rpm:: update_spec_version
+	@								    \
+  VERS=`sed -n 's/[^0-9]*\([0-9]\.[0-9][0-9]*\).*/\1/p' ../version.h` ;	    \
+  cp -p xdaliclock-$$VERS.tar.gz /usr/src/redhat/SOURCES/ ;		    \
+  rpm -ba xdaliclock.spec
+
+
+
+#############################################################################
+# DO NOT DELETE: updated by make distdepend
+
+
+xdaliclock.o: config.h
+xdaliclock.o: $(srcdir)/xdaliclock.h
+xdaliclock.o: $(srcdir)/vroot.h
+xdaliclock.o: $(srcdir)/../version.h
+xdaliclock.o: $(srcdir)/resources.h
+xdaliclock.o: $(srcdir)/visual.h
+xdaliclock.o: XDaliClock_ad.h
+digital.o: config.h
+digital.o: $(srcdir)/xdaliclock.h
+digital.o: $(srcdir)/resources.h
+digital.o: $(srcdir)/usleep.h
+digital.o: $(srcdir)/vroot.h
+digital.o: $(srcdir)/../numbers0/zero0.xbm
+digital.o: $(srcdir)/../numbers0/one0.xbm
+digital.o: $(srcdir)/../numbers0/two0.xbm
+digital.o: $(srcdir)/../numbers0/three0.xbm
+digital.o: $(srcdir)/../numbers0/four0.xbm
+digital.o: $(srcdir)/../numbers0/five0.xbm
+digital.o: $(srcdir)/../numbers0/six0.xbm
+digital.o: $(srcdir)/../numbers0/seven0.xbm
+digital.o: $(srcdir)/../numbers0/eight0.xbm
+digital.o: $(srcdir)/../numbers0/nine0.xbm
+digital.o: $(srcdir)/../numbers0/colon0.xbm
+digital.o: $(srcdir)/../numbers0/slash0.xbm
+digital.o: $(srcdir)/../numbers1/zero1.xbm
+digital.o: $(srcdir)/../numbers1/one1.xbm
+digital.o: $(srcdir)/../numbers1/two1.xbm
+digital.o: $(srcdir)/../numbers1/three1.xbm
+digital.o: $(srcdir)/../numbers1/four1.xbm
+digital.o: $(srcdir)/../numbers1/five1.xbm
+digital.o: $(srcdir)/../numbers1/six1.xbm
+digital.o: $(srcdir)/../numbers1/seven1.xbm
+digital.o: $(srcdir)/../numbers1/eight1.xbm
+digital.o: $(srcdir)/../numbers1/nine1.xbm
+digital.o: $(srcdir)/../numbers1/colon1.xbm
+digital.o: $(srcdir)/../numbers1/slash1.xbm
+digital.o: $(srcdir)/../numbers2/zero2.xbm
+digital.o: $(srcdir)/../numbers2/one2.xbm
+digital.o: $(srcdir)/../numbers2/two2.xbm
+digital.o: $(srcdir)/../numbers2/three2.xbm
+digital.o: $(srcdir)/../numbers2/four2.xbm
+digital.o: $(srcdir)/../numbers2/five2.xbm
+digital.o: $(srcdir)/../numbers2/six2.xbm
+digital.o: $(srcdir)/../numbers2/seven2.xbm
+digital.o: $(srcdir)/../numbers2/eight2.xbm
+digital.o: $(srcdir)/../numbers2/nine2.xbm
+digital.o: $(srcdir)/../numbers2/colon2.xbm
+digital.o: $(srcdir)/../numbers2/slash2.xbm
+digital.o: $(srcdir)/../numbers3/zero3.xbm
+digital.o: $(srcdir)/../numbers3/one3.xbm
+digital.o: $(srcdir)/../numbers3/two3.xbm
+digital.o: $(srcdir)/../numbers3/three3.xbm
+digital.o: $(srcdir)/../numbers3/four3.xbm
+digital.o: $(srcdir)/../numbers3/five3.xbm
+digital.o: $(srcdir)/../numbers3/six3.xbm
+digital.o: $(srcdir)/../numbers3/seven3.xbm
+digital.o: $(srcdir)/../numbers3/eight3.xbm
+digital.o: $(srcdir)/../numbers3/nine3.xbm
+digital.o: $(srcdir)/../numbers3/colon3.xbm
+digital.o: $(srcdir)/../numbers3/slash3.xbm
+colors.o: config.h
+colors.o: $(srcdir)/xdaliclock.h
+colors.o: $(srcdir)/resources.h
+colors.o: $(srcdir)/visual.h
+colors.o: $(srcdir)/hsv.h
+resources.o: config.h
+resources.o: $(srcdir)/resources.h
+visual.o: config.h
+visual.o: $(srcdir)/resources.h
+visual.o: $(srcdir)/visual.h
+overlay.o: config.h
+overlay.o: $(srcdir)/visual.h
+hsv.o: config.h
+hsv.o: $(srcdir)/hsv.h
+usleep.o: config.h
+
