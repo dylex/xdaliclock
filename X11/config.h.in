@@ -1,0 +1,38 @@
+/* config.h.in --- xdaliclock, Copyright (c) 1999 Jamie Zawinski.
+ *
+ *  The best way to set these parameters is by running the included `configure'
+ *  script.  That examines your system, and generates `config.h' from 
+ *  `config.h.in'.
+ *
+ *  If something goes very wrong, you can edit `config.h' directly, but beware
+ *  that your changes will be lost if you ever run `configure' again.
+ */
+
+
+/* Define this to include the builtin fonts.  */
+#define BUILTIN_FONTS
+
+/* Define this if you have the X11 SHAPE extension.  */
+#undef HAVE_SHAPE
+
+/* Define to empty if the keyword does not work.  */
+#undef const
+
+/* Define as __inline if that's what the C compiler calls it.  */
+#undef inline
+
+/* Define if you have the ANSI C header files.  */
+#undef STDC_HEADERS
+
+/* Define if you can safely include both <sys/time.h> and <time.h>.  */
+#undef TIME_WITH_SYS_TIME
+
+/* Define if you have the select function.  */
+#undef HAVE_SELECT
+
+/* Define if you have the <unistd.h> header file.  */
+#undef HAVE_UNISTD_H
+
+/* Define if you have <sys/select.h> that defines fd_set and FD_SET.  */
+#undef HAVE_SYS_SELECT_H
+

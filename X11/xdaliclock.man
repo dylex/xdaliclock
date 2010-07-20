@@ -1,0 +1,359 @@
+.de EX		\"Begin example
+.ne 5
+.if n .sp 1
+.if t .sp .5
+.nf
+.in +.5i
+..
+.de EE
+.fi
+.in -.5i
+.if n .sp 1
+.if t .sp .5
+..
+.TH XDaliClock 1 "11-Sep-2002" "X Version 11"
+.SH NAME
+xdaliclock - melting digital clock
+.SH SYNOPSIS
+.B xdaliclock
+[-\fItoolkitoption\fP ...] [-\fIoption\fP ...]
+.SH DESCRIPTION
+The \fIxdaliclock\fP program displays a digital clock; when a digit
+changes, it ``melts'' into its new shape.
+
+This program was inspired by the Alto and Macintosh programs of the same
+name, written by Steve Capps in 1983 or 1984.
+.SH OPTIONS
+.I xdaliclock
+accepts all of the standard toolkit options, and also accepts the
+following options:
+.TP 8
+.B \-help
+Print a brief summary of the allowed options on the standard error output.
+.TP 8
+.B \-12
+Use a twelve hour clock.
+.TP 8
+.B \-24
+Use a twenty-four hour clock.
+.TP 8
+.B \-seconds
+Update every second.
+.TP 8
+.B \-noseconds
+Update once per minute; don't display seconds at all.
+.TP 8
+.B \-cycle
+Do color-cycling.
+.TP 8
+.B \-nocycle
+Don't do color-cycling.
+.TP 8
+.B \-font \fIfontname\fP
+Specifies the X font to use; \fIxdaliclock\fP can correctly animate any font
+that contains all the digits plus colon and slash, and in which the letters
+aren't excessively curly.
+
+The \fIxdaliclock\fP program also contains four builtin bitmapped fonts,
+which are larger and more attractive than the standard X fonts.  One of
+these fonts will be used if the \fI-font\fP option is given one of the
+fontnames \fBBUILTIN0\fP,  \fBBUILTIN1\fP,  \fBBUILTIN2\fP, or \fBBUILTIN3\fP.
+.TP 8
+.B \-builtin0
+This is the same as specifying \fI-font BUILTIN0\fP.
+.TP 8
+.B \-builtin1
+This is the same as specifying \fI-font BUILTIN1\fP.
+.TP 8
+.B \-builtin2\fP or \fB-builtin\fP
+This is the same as specifying \fI-font BUILTIN2\fP.
+.TP 8
+.B \-builtin3
+This is the same as specifying \fI-font BUILTIN3\fP.
+.TP 8
+.B \-fullscreen
+Make the window take up the whole screen.  When \fI-fullscreen\fP is
+specified, the displayed time will wander around a little, to prevent
+any pixels from being on continuously and causing phosphor burn-in.
+.TP 8
+.B \-root
+Display the clock on the root window instead of in its own window.
+This makes the digits wander around too.
+.TP 8
+.B \-window-id \fIwindow\fP
+Render the clock on a window created by some other program.
+.TP 8
+.B \-visual \fIvisual\fP
+Specify which visual to use.  Legal values are:
+.RS 8
+.TP 8
+.B default
+Use the screen's default visual (the visual of the root window.)  
+This is the default.
+.TP 8
+.B best
+Use the visual which supports the most writable color cells.
+.TP 8
+.I class
+One of \fBStaticGray\fP, \fBStaticColor\fP, \fBTrueColor\fP, \fBGrayScale\fP,
+\fBPseudoColor\fP, or \fBDirectColor\fP.  Selects the deepest visual of
+the given class.
+.TP 8
+.I number
+A number (decimal or hex) is interpreted as a visual id number, as reported
+by the
+.BR xdpyinfo (1)
+program; in this way you can select a shallower visual if desired.
+.RE
+.PP
+.RS 8
+If you don't have a 24-bit system, using a visual other than the default
+one may cause colormap flashing.
+.RE
+.TP 8
+.B \-transparent
+Causes the background of the window to be transparent, if possible.
+
+If the server supports overlay planes, then they will be used (this is
+the case on SGIs, and on certain HP, DEC, and IBM systems.)
+
+If overlay planes are not available, but the server supports the Shape
+extension, then that will be used instead.  However, the Shape extension
+is very inefficient: it will cause your X server to use up a lot of cycles.
+
+Also, if the Shape extension is used, you will probably need to configure
+your window manager to not put a titlebar on the XDaliClock window.  (This
+is the case at least with \fItwm\fP, \fItvtwm\fP, and \fImwm\fP.)  If
+you don't do this, then the window will flicker constantly, as the window
+manager tries to add and remove the titlebar ten times each second.
+
+None of these problems occur if overlay planes are used (or if 
+the \-transparent option is not requested.)
+.TP 8
+.B \-nontransparent
+Don't make the window's background be transparent.  This is the default.
+.TP 8
+.B \-memory low
+Use high-bandwidth, low-memory mode.  If you have a very fast connection
+between the machine this program is running on and the X server it is
+displaying on, then \fIxdaliclock\fP can work correctly by simply making
+the drawing requests it needs when it needs them.  This is \fIthe elegant
+method.\fP  However, the amount of data necessary to animate the display
+ends up being a bit over 10 kilobytes worth of X Protocol per second.  On a
+fast machine with a local display, or over a fast network, that's almost
+negligible, but (for example) an NCD X Terminal at 38.4 kbps can't
+keep up.  That is the reason for:
+.TP 8
+.B \-memory medium
+Use high-memory, low-bandwidth mode.  In this mode, \fIxdaliclock\fP
+precomputes most of the frames that it will ever need.  This is \fIthe
+sleazy copout method.\fP  The bandwidth requirements are drastically
+reduced, because instead of telling the server what bits to draw where,
+it merely tells it what pixmaps to copy into the window.  Aside from the
+fact that I consider this to be \fIcheating,\fP the only downside of this
+method is that those pixmaps (about 170 of them, each the size of one
+character) are consuming server-memory.  This probably isn't a very big deal,
+unless you're using an exceptionally large font.
+.TP 8
+.B \-memory high
+With \fImemory\fP set to \fIhigh\fP, the cache is twice as
+large (the \fIn -> n+2\fP transitions are cached as well as the \fIn -> n+1\fP
+ones).  Even with memory set to \fImedium\fP, this program can seem sluggish
+when using a large font over a very slow connection to the display server.
+.TP 8
+.B \-countdown \fIdate\fP
+Instead of displaying the current time, display a countdown to the specified
+date (if the date has already passed, count up from it.)  The date can take
+two forms: either a time_t (an integer, the number of seconds 
+past "Jan 1 00:00:00 GMT 1970"); or, a string of the form
+"Mmm DD HH:MM:SS YYYY", for example, "Jan 1 00:00:00 2000".  This string
+is interpreted in the local time zone.
+
+To count up from the current time, do this:
+.EX
+xdaliclock \-countdown "`date '+%b %d %T %Y'`"
+.EE
+.PP
+The following standard X Toolkit command line arguments are commonly
+used with \fIxdaliclock\fP:
+.TP 8
+.B \-display \fIhost:dpy\fP
+This option specifies the X server to contact.
+.TP 8
+.B \-geometry \fIgeometry\fP
+This option specifies the preferred size and position of the clock window.
+.TP 8
+.B \-bg \fIcolor\fP
+This option specifies the color to use for the background of the window.
+The default is ``white.''
+.TP 8
+.B \-fg \fIcolor\fP
+This option specifies the color to use for the foreground of the window.
+The default is ``black.''
+.TP 8
+.B \-bd \fIcolor\fP
+This option specifies the color to use for the border of the window.
+The default is the same as the foreground color.
+.TP 8
+.B \-rv
+This option indicates that reverse video should be simulated by swapping
+the foreground and background colors.
+.TP 8
+.B \-bw \fInumber\fP
+This option specifies the width in pixels of the border surrounding
+the window.
+.TP 8
+.B \-xrm \fIresourcestring\fP
+This option specifies a resource string to be used.
+.SH COMMANDS
+Clicking and holding any mouse button in the \fIxdaliclock\fP window will
+cause it to display the date while the button is held.
+.PP
+Typing ``space'' at the \fIxdaliclock\fP window will toggle between a
+twelve hour and twenty-four hour display.
+.PP
+Typing ``q'' or ``^C'' at the window quits.
+
+If the \fIxdaliclock\fP window is iconified or otherwise unmapped, it
+will go to sleep until it is mapped again.
+.SH X RESOURCES
+\fIxdaliclock\fP understands all of the core resource names and
+classes as well as:
+.PP
+
+.TP 8
+.B mode (\fPclass\fB Mode)
+Whether to display 12-hour or 24-hour time.
+If \fB12\fP, this is the same as the \fI\-12\fP command line argument;
+if \fB24\fP, this is the same as \fI\-24.\fP
+.TP 8
+.B datemode (\fPclass\fB DateMode)
+Specifies how the date should be printed when a mouse button is held down.
+This may be one of the strings \fBmm/dd/yy\fP, \fBdd/mm/yy\fP,
+\fByy/mm/dd\fP, \fByy/dd/mm\fP, \fBmm/yy/dd\fP, or \fBdd/yy/mm\fP.
+The default is \fBmm/dd/yy\fP.  If seconds are not being displayed, then
+only the first four digits will ever be displayed (\fBmm/dd\fP instead
+of \fBmm/dd/yy\fP, for example.)
+.TP 8
+.B seconds (\fPclass\fB Seconds)
+Whether to display seconds.
+If true, this is the same as the \fI-seconds\fP command line argument;
+if false, this is the same as \fI-noseconds.\fP
+.TP 8
+.B cycle (\fPclass\fB Cycle)
+Whether to do color cycling.
+If true, this is the same as the \fI-cycle\fP command line argument;
+if false, this is the same as \fI-nocycle.\fP
+.TP 8
+.B font (\fPclass\fB Font)
+The same as the \fI-font\fP command line option: the font to melt.
+If this is one of the 
+strings \fBBUILTIN0\fP, \fBBUILTIN1\fP, \fBBUILTIN2\fP, or \fBBUILTIN3\fP,
+then one of the large builtin fonts will be used.  Otherwise, this must 
+be the name of a valid X font.
+.TP 8
+.B fullScreen (\fPclass\fB FullScreen)
+The same as the \fI\-fullscreen\fP command-line option.
+.TP 8
+.B root (\fPclass\fB Root)
+The same as the \fI\-root\fP command-line option.
+.TP 8
+.B visualID (\fPclass\fB VisualID)
+The same as the \fI\-visual\fP command-line option.
+.TP 8
+.B transparent (\fPclass\fB Transparent)
+Whether to make the window's background be transparent, if possible.
+If true, this is the same as the \fI-transparent\fP command line argument;
+if false, this is the same as \fI-nontransparent.\fP
+.TP 8
+.B memory (\fPclass\fB Memory)
+This must be \fIhigh\fP, \fImedium\fP, or \fIlow\fP, the same as
+the \fI-memory\fP command-line option.
+.TP 8
+.B countdown (\fPclass\fB Countdown)
+Same as the \fI-countdown\fP command-line option.
+.SH ENVIRONMENT
+.PP
+.TP 4
+.B DISPLAY
+to get the default host and display number.
+.TP 4
+.B XENVIRONMENT
+to get the name of a resource file that overrides the global resources
+stored in the RESOURCE_MANAGER property.
+.TP 4
+.B TZ
+to get the current time zone.  If you want to force the clock to display
+some other time zone, set this variable before starting it.  For example:
+.EX
+ sh:   TZ=GMT0 xdaliclock
+csh:   ( setenv TZ PST8PDT ; xdaliclock )
+.EE
+You may notice that the format of the TZ variable (which is used by the
+C library
+.BR ctime (3)
+and
+.BR localtime (3)
+routines) is not actually documented anywhere.  The fourth character (the
+digit) is the only thing that really matters: it is the offset in hours from
+GMT.  The first three characters are ignored.  The last three characters are
+used to flag daylight savings time: their presence effectively adds 1 to the
+zone offset.  (I am not making this up...)
+.SH BUGS
+Other system load will sometimes cause the second-display to increment
+by more than one second at a time, in order to remain synchronized to
+the current time.
+
+The \fI-memory\fP option is disgusting and shouldn't be necessary, but I'm
+not clever enough to eliminate it.  It has been said that hacking graphics
+in X is like finding \fIsqrt(pi)\fP with roman numerals.
+
+When using a small font (less than 48x56 or so) it's possible that shipping
+a bitmap to the server would be more efficient than sending a DrawSegments
+request (since the endpoints are specified using 16 bits each, when all that
+we really need is 6 or 7 bits.)
+
+Support for the Shared Memory Extension would be a good thing.
+
+It should display the day of the week somewhere.
+
+The color cycling should be less predictable; it should vary saturation and
+intensity as well, and should be more careful that foreground and background
+contrast well.
+
+The correct default datemode should be extracted from the current locale.
+
+Should have a \fI-analog\fP mode (maybe someday...)
+.SH UPGRADES
+The latest version can always be found at 
+http://www.jwz.org/xdaliclock/
+
+There is a version of this program for PalmOS available there as well.
+.SH "SEE ALSO"
+.BR X (1),
+.BR xrdb (1),
+.BR xlsfonts (1),
+.BR xclock (1),
+.BR dclock (1),
+.BR oclock (1),
+.BR tclock (1),
+.BR xscreensaver (1)
+.SH COPYRIGHT
+Copyright \(co 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2002 by 
+Jamie Zawinski.  Permission to use, copy, modify, distribute, and sell this
+software and its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and that both
+that copyright notice and this permission notice appear in supporting
+documentation.  No representations are made about the suitability of this
+software for any purpose.  It is provided "as is" without express or implied
+warranty.
+.SH AUTHOR
+Jamie Zawinski <jwz@jwz.org>, 18-sep-91.
+
+Please let me know if you find any bugs or make any improvements.
+
+Thanks to Ephraim Vishniac <ephraim@think.com> for explaining the format of
+the bitmap resources in the Macintosh version of this, so that I could snarf
+them for the \fI-builtin3\fP font.
+
+And thanks to Steve Capps for the really great idea.
