@@ -1,6 +1,7 @@
 Makefile
 autom4te.cache
 *.o
+XDaliClock_ad.h
 config.h
 config.log
 config.status
