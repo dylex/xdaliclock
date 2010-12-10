@@ -2,7 +2,7 @@
 "*mode:			12",
 "*datemode:		MM/DD/YY",
 "*seconds:		True",
-"*cycle:			False",
+"*cycle:			True",
 "*transparent:		False",
 "*memory:		Low",
 "*foreground:		white",

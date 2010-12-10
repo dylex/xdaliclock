@@ -57,154 +57,22 @@ struct raw_number {
   int width, height;
 };
 
-#endif /* BUILTIN_FONTS */
-
-#ifdef BUILTIN_FONTS
-
-# include "zero0.xbm"
-# include "one0.xbm"
-# include "two0.xbm"
-# include "three0.xbm"
-# include "four0.xbm"
-# include "five0.xbm"
-# include "six0.xbm"
-# include "seven0.xbm"
-# include "eight0.xbm"
-# include "nine0.xbm"
-# include "colon0.xbm"
-# include "slash0.xbm"
-
-static struct raw_number numbers_0 [] = {
-  { zero0_bits, zero0_width, zero0_height },
-  { one0_bits, one0_width, one0_height },
-  { two0_bits, two0_width, two0_height },
-  { three0_bits, three0_width, three0_height },
-  { four0_bits, four0_width, four0_height },
-  { five0_bits, five0_width, five0_height },
-  { six0_bits, six0_width, six0_height },
-  { seven0_bits, seven0_width, seven0_height },
-  { eight0_bits, eight0_width, eight0_height },
-  { nine0_bits, nine0_width, nine0_height },
-  { colon0_bits, colon0_width, colon0_height },
-  { slash0_bits, slash0_width, slash0_height },
-  { 0, }
-};
-
-# include "zero1.xbm"
-# include "one1.xbm"
-# include "two1.xbm"
-# include "three1.xbm"
-# include "four1.xbm"
-# include "five1.xbm"
-# include "six1.xbm"
-# include "seven1.xbm"
-# include "eight1.xbm"
-# include "nine1.xbm"
-# include "colon1.xbm"
-# include "slash1.xbm"
-
-static struct raw_number numbers_1 [] = {
-  { zero1_bits, zero1_width, zero1_height },
-  { one1_bits, one1_width, one1_height },
-  { two1_bits, two1_width, two1_height },
-  { three1_bits, three1_width, three1_height },
-  { four1_bits, four1_width, four1_height },
-  { five1_bits, five1_width, five1_height },
-  { six1_bits, six1_width, six1_height },
-  { seven1_bits, seven1_width, seven1_height },
-  { eight1_bits, eight1_width, eight1_height },
-  { nine1_bits, nine1_width, nine1_height },
-  { colon1_bits, colon1_width, colon1_height },
-  { slash1_bits, slash1_width, slash1_height },
-  { 0, }
-};
-
-# include "zero2.xbm"
-# include "one2.xbm"
-# include "two2.xbm"
-# include "three2.xbm"
-# include "four2.xbm"
-# include "five2.xbm"
-# include "six2.xbm"
-# include "seven2.xbm"
-# include "eight2.xbm"
-# include "nine2.xbm"
-# include "colon2.xbm"
-# include "slash2.xbm"
-
-static struct raw_number numbers_2 [] = {
-  { zero2_bits, zero2_width, zero2_height },
-  { one2_bits, one2_width, one2_height },
-  { two2_bits, two2_width, two2_height },
-  { three2_bits, three2_width, three2_height },
-  { four2_bits, four2_width, four2_height },
-  { five2_bits, five2_width, five2_height },
-  { six2_bits, six2_width, six2_height },
-  { seven2_bits, seven2_width, seven2_height },
-  { eight2_bits, eight2_width, eight2_height },
-  { nine2_bits, nine2_width, nine2_height },
-  { colon2_bits, colon2_width, colon2_height },
-  { slash2_bits, slash2_width, slash2_height },
-  { 0, }
-};
-
-# include "zeroD.xbm"
-# include "oneD.xbm"
-# include "twoD.xbm"
-# include "threeD.xbm"
-# include "fourD.xbm"
-# include "fiveD.xbm"
-# include "sixD.xbm"
-# include "sevenD.xbm"
-# include "eightD.xbm"
-# include "nineD.xbm"
-# include "colonD.xbm"
-# include "slashD.xbm"
-
-static struct raw_number numbers_D [] = {
-  { zeroD_bits, zeroD_width, zeroD_height },
-  { oneD_bits, oneD_width, oneD_height },
-  { twoD_bits, twoD_width, twoD_height },
-  { threeD_bits, threeD_width, threeD_height },
-  { fourD_bits, fourD_width, fourD_height },
-  { fiveD_bits, fiveD_width, fiveD_height },
-  { sixD_bits, sixD_width, sixD_height },
-  { sevenD_bits, sevenD_width, sevenD_height },
-  { eightD_bits, eightD_width, eightD_height },
-  { nineD_bits, nineD_width, nineD_height },
-  { colonD_bits, colonD_width, colonD_height },
-  { slashD_bits, slashD_width, slashD_height },
-  { 0, }
-};
-
-# include "zeroC.xbm"
-# include "oneC.xbm"
-# include "twoC.xbm"
-# include "threeC.xbm"
-# include "fourC.xbm"
-# include "fiveC.xbm"
-# include "sixC.xbm"
-# include "sevenC.xbm"
-# include "eightC.xbm"
-# include "nineC.xbm"
-# include "colonC.xbm"
-# include "slashC.xbm"
-
-static struct raw_number numbers_C [] = {
-  { zeroC_bits, zeroC_width, zeroC_height },
-  { oneC_bits, oneC_width, oneC_height },
-  { twoC_bits, twoC_width, twoC_height },
-  { threeC_bits, threeC_width, threeC_height },
-  { fourC_bits, fourC_width, fourC_height },
-  { fiveC_bits, fiveC_width, fiveC_height },
-  { sixC_bits, sixC_width, sixC_height },
-  { sevenC_bits, sevenC_width, sevenC_height },
-  { eightC_bits, eightC_width, eightC_height },
-  { nineC_bits, nineC_width, nineC_height },
-  { colonC_bits, colonC_width, colonC_height },
-  { slashC_bits, slashC_width, slashC_height },
-  { 0, }
-};
+#define FONT(X)								\
+ static const struct raw_number numbers_ ## X [] = {			\
+  { zero  ## X ## _bits,  zero ## X ## _width,  zero ## X ## _height }, \
+  { one   ## X ## _bits,   one ## X ## _width,   one ## X ## _height }, \
+  { two   ## X ## _bits,   two ## X ## _width,   two ## X ## _height }, \
+  { three ## X ## _bits, three ## X ## _width, three ## X ## _height }, \
+  { four  ## X ## _bits,  four ## X ## _width,  four ## X ## _height }, \
+  { five  ## X ## _bits,  five ## X ## _width,  five ## X ## _height }, \
+  { six   ## X ## _bits,   six ## X ## _width,   six ## X ## _height }, \
+  { seven ## X ## _bits, seven ## X ## _width, seven ## X ## _height }, \
+  { eight ## X ## _bits, eight ## X ## _width, eight ## X ## _height }, \
+  { nine  ## X ## _bits,  nine ## X ## _width,  nine ## X ## _height }, \
+  { colon ## X ## _bits, colon ## X ## _width, colon ## X ## _height }, \
+  { slash ## X ## _bits, slash ## X ## _width, slash ## X ## _height }, \
+  { 0, }								\
+}
 
 # include "zeroB.xbm"
 # include "oneB.xbm"
@@ -218,25 +86,77 @@ static struct raw_number numbers_C [] = {
 # include "nineB.xbm"
 # include "colonB.xbm"
 # include "slashB.xbm"
+FONT(B);
 
-static struct raw_number numbers_B [] = {
-  { zeroB_bits, zeroB_width, zeroB_height },
-  { oneB_bits, oneB_width, oneB_height },
-  { twoB_bits, twoB_width, twoB_height },
-  { threeB_bits, threeB_width, threeB_height },
-  { fourB_bits, fourB_width, fourB_height },
-  { fiveB_bits, fiveB_width, fiveB_height },
-  { sixB_bits, sixB_width, sixB_height },
-  { sevenB_bits, sevenB_width, sevenB_height },
-  { eightB_bits, eightB_width, eightB_height },
-  { nineB_bits, nineB_width, nineB_height },
-  { colonB_bits, colonB_width, colonB_height },
-  { slashB_bits, slashB_width, slashB_height },
-  { 0, }
+# include "zeroC.xbm"
+# include "oneC.xbm"
+# include "twoC.xbm"
+# include "threeC.xbm"
+# include "fourC.xbm"
+# include "fiveC.xbm"
+# include "sixC.xbm"
+# include "sevenC.xbm"
+# include "eightC.xbm"
+# include "nineC.xbm"
+# include "colonC.xbm"
+# include "slashC.xbm"
+FONT(C);
+
+# include "zeroD.xbm"
+# include "oneD.xbm"
+# include "twoD.xbm"
+# include "threeD.xbm"
+# include "fourD.xbm"
+# include "fiveD.xbm"
+# include "sixD.xbm"
+# include "sevenD.xbm"
+# include "eightD.xbm"
+# include "nineD.xbm"
+# include "colonD.xbm"
+# include "slashD.xbm"
+FONT(D);
+
+# include "zeroE.xbm"
+# include "oneE.xbm"
+# include "twoE.xbm"
+# include "threeE.xbm"
+# include "fourE.xbm"
+# include "fiveE.xbm"
+# include "sixE.xbm"
+# include "sevenE.xbm"
+# include "eightE.xbm"
+# include "nineE.xbm"
+# include "colonE.xbm"
+# include "slashE.xbm"
+FONT(E);
+
+# include "zeroF.xbm"
+# include "oneF.xbm"
+# include "twoF.xbm"
+# include "threeF.xbm"
+# include "fourF.xbm"
+# include "fiveF.xbm"
+# include "sixF.xbm"
+# include "sevenF.xbm"
+# include "eightF.xbm"
+# include "nineF.xbm"
+# include "colonF.xbm"
+# include "slashF.xbm"
+FONT(F);
+
+static const struct raw_number * const all_numbers[] = {
+ /* Ordered according to -builtin, -builtin1, etc. */
+ numbers_F,
+ numbers_E,
+ numbers_D,
+ numbers_C,
+ numbers_B,
 };
 
-
 #endif /* BUILTIN_FONTS */
+
+#undef countof
+#define countof(x) (sizeof((x))/sizeof(*(x)))
 
 static char *window_title;
 static char *font_name;
@@ -541,19 +461,11 @@ load_builtin_font (Screen *screen, Visual *visual, int which)
   Display *dpy = DisplayOfScreen (screen);
   int i;
 
-  struct raw_number *nums;
+  const struct raw_number *nums;
   XImage *image;
 
-  switch (which)
-    {
-    case 0: nums = numbers_0; break;
-    case 1: nums = numbers_1; break;
-    case 2: nums = numbers_2; break;
-    case 3: nums = numbers_D; break;
-    case 4: nums = numbers_C; break;
-    case 5: nums = numbers_B; break;
-    default: abort(); break;
-    }
+  if (which < 0 || which >= countof(all_numbers)) abort();
+  nums = all_numbers[which];
 
   image =
     XCreateImage (dpy, visual,
@@ -568,7 +480,7 @@ load_builtin_font (Screen *screen, Visual *visual, int which)
 
   for (i = 0; i < 10; i++)
     {
-      struct raw_number *number = &nums [i];
+      const struct raw_number *number = &nums [i];
       character_width = MAX (character_width, number->width);
       character_height = MAX (character_height, number->height);
       image->width = number->width;
@@ -1071,7 +983,6 @@ get_resources (Screen *screen)
   if (!strcasecmp (font_name, "BUILTIN" )) use_builtin_font = 2;
   if (!strcasecmp (font_name, "BUILTIN3")) use_builtin_font = 3;
   if (!strcasecmp (font_name, "BUILTIN4")) use_builtin_font = 4;
-  if (!strcasecmp (font_name, "BUILTIN5")) use_builtin_font = 5;
 #endif /* BUILTIN_FONTS */
 
   buf = get_string_resource ("mode", "Mode");

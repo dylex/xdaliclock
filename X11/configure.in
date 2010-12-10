@@ -1,7 +1,7 @@
 # configure.in --- xdaliclock, Copyright (c) 1999 Jamie Zawinski.
 #
 
-AC_INIT(../numbers_big/fourB.xbm)
+AC_INIT(../font/zeroG.xbm)
 AC_CONFIG_HEADER(config.h)
 
 echo "current directory: `pwd`"
@@ -11,7 +11,7 @@ echo "command line was: $0 $@"
 # check for some random other file that come later in the tar file,
 # to make sure everything is here.
 #
-f=$srcdir/../numbers_big/zeroC.xbm
+f=$srcdir/../font/zeroG.xbm
 if test \! -r $f ; then
   echo ""
   echo "ERROR: The package is incomplete: $f does not exist."

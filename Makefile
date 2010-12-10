@@ -4,8 +4,7 @@ SHELL		= /bin/sh
 TARFILES	= README Makefile version.h \
 		  config.guess config.sub install-sh \
 		  mac128/README mac128/*.*
-NUMBERS		= numbers0/*.xbm numbers1/*.xbm numbers2/*.xbm \
-		  numbers_big/README numbers_big/*.gif numbers_big/*.xbm
+NUMBERS		= font/*.pl font/dalifont*.{gif,gz} font/*.xbm
 TAR		= tar
 
 

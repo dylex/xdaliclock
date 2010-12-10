@@ -99,7 +99,6 @@ static XrmOptionDescRec options [] = {
   { "-builtin2",        ".font",                XrmoptionNoArg, "BUILTIN2" },
   { "-builtin3",        ".font",                XrmoptionNoArg, "BUILTIN3" },
   { "-builtin4",        ".font",                XrmoptionNoArg, "BUILTIN4" },
-  { "-builtin5",        ".font",                XrmoptionNoArg, "BUILTIN5" },
   { "-memory",          ".memory",              XrmoptionSepArg, 0 },
   { "-sleaze-level",    ".memory",              XrmoptionSepArg, 0 },
   { "-oink",            ".memory",              XrmoptionNoArg, "Medium" },
@@ -474,7 +473,7 @@ where options include\n\
   fprintf (stderr, "\
   -font or -fn <font>           Name of an X font or built-in font to use.\n\
                                 There are six builtin fonts, named\n\
-                                \"BUILTIN0\", through \"BUILTIN5\", with #2\n\
+                                \"BUILTIN0\", through \"BUILTIN4\", with #2\n\
                                 being the default.\n\
   -builtin0                     Same as -font BUILTIN0.\n\
   -builtin1                     Same as -font BUILTIN1.\n\
@@ -482,7 +481,6 @@ where options include\n\
   -builtin                      Same as -font BUILTIN.\n\
   -builtin3                     Same as -font BUILTIN3.\n\
   -builtin4                     Same as -font BUILTIN4.\n\
-  -builtin5                     Same as -font BUILTIN5.\n\
 ");
 #else /* !BUILTIN_FONTS */
   fprintf (stderr, "\

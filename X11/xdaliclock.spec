@@ -1,7 +1,7 @@
 Name: xdaliclock
 Summary: melting digital clock
 Vendor: Jamie Zawinski <jwz@jwz.org>
-Version: 2.34
+Version: 2.35
 Release: 1
 URL: http://www.jwz.org/xdaliclock/
 Source: xdaliclock-%{version}.tar.gz
