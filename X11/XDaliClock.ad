@@ -3,12 +3,12 @@
 ! available at http://www.jwz.org/xdaliclock/
 
 *title:			xdaliclock
-*mode:			24
+*mode:			12
 *datemode:		YY/MM/DD
 *seconds:		True
-*cycle:			True
+*cycle:			False
 *transparent:		False
-*memory:		Low
+*memory:		Medium
 *foreground:		white
 *background:		black
 *visualID:		default

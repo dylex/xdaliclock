@@ -813,11 +813,10 @@ fill_time_digits (void)
           break;
         }
 
-# if 0 /* what was this for? */
-      if (twelve_hour_time && time_digits [0] == 0)
-        time_digits [0] = -1;
-# endif
     }
+
+  if (twelve_hour_time && time_digits [0] == 0)
+    time_digits [0] = -1;
 
   if (be_a_pig < 0)
     {
