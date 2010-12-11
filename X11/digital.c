@@ -48,7 +48,13 @@ static void fill_borders (Display *dpy, Window window, GC gc,
                           int x, int y, int width, int height);
 static void draw_colon (Display *dpy, Drawable pixmap, Window window);
 
+#define COLON_CHAR (hex_time ? '_' : ':')
+#define SLASH_CHAR ('/')
+
 #ifdef BUILTIN_FONTS
+
+#define NUMS_COLON_INDEX	(hex_time ? 17 : 16)
+#define NUMS_SLASH_INDEX	18
 
 static int use_builtin_font;
 
@@ -69,7 +75,14 @@ struct raw_number {
   { seven ## X ## _bits, seven ## X ## _width, seven ## X ## _height }, \
   { eight ## X ## _bits, eight ## X ## _width, eight ## X ## _height }, \
   { nine  ## X ## _bits,  nine ## X ## _width,  nine ## X ## _height }, \
+  { ten   ## X ## _bits,   ten ## X ## _width,   ten ## X ## _height }, \
+  { eleven## X ## _bits,eleven ## X ## _width,eleven ## X ## _height }, \
+  { twelve## X ## _bits,twelve ## X ## _width,twelve ## X ## _height }, \
+  {thirteen##X ## _bits,thirteen##X ## _width,thirteen##X ## _height }, \
+  {fourteen##X ## _bits,fourteen##X ## _width,fourteen##X ## _height }, \
+  {fifteen## X ## _bits,fifteen## X ## _width,fifteen## X ## _height }, \
   { colon ## X ## _bits, colon ## X ## _width, colon ## X ## _height }, \
+  {underbar##X ## _bits,underbar##X ## _width,underbar##X ## _height }, \
   { slash ## X ## _bits, slash ## X ## _width, slash ## X ## _height }, \
   { 0, }								\
 }
@@ -84,7 +97,14 @@ struct raw_number {
 # include "sevenB.xbm"
 # include "eightB.xbm"
 # include "nineB.xbm"
+# include "tenB.xbm"
+# include "elevenB.xbm"
+# include "twelveB.xbm"
+# include "thirteenB.xbm"
+# include "fourteenB.xbm"
+# include "fifteenB.xbm"
 # include "colonB.xbm"
+# include "underbarB.xbm"
 # include "slashB.xbm"
 FONT(B);
 
@@ -98,7 +118,14 @@ FONT(B);
 # include "sevenC.xbm"
 # include "eightC.xbm"
 # include "nineC.xbm"
+# include "tenC.xbm"
+# include "elevenC.xbm"
+# include "twelveC.xbm"
+# include "thirteenC.xbm"
+# include "fourteenC.xbm"
+# include "fifteenC.xbm"
 # include "colonC.xbm"
+# include "underbarC.xbm"
 # include "slashC.xbm"
 FONT(C);
 
@@ -112,7 +139,14 @@ FONT(C);
 # include "sevenD.xbm"
 # include "eightD.xbm"
 # include "nineD.xbm"
+# include "tenD.xbm"
+# include "elevenD.xbm"
+# include "twelveD.xbm"
+# include "thirteenD.xbm"
+# include "fourteenD.xbm"
+# include "fifteenD.xbm"
 # include "colonD.xbm"
+# include "underbarD.xbm"
 # include "slashD.xbm"
 FONT(D);
 
@@ -126,7 +160,14 @@ FONT(D);
 # include "sevenE.xbm"
 # include "eightE.xbm"
 # include "nineE.xbm"
+# include "tenE.xbm"
+# include "elevenE.xbm"
+# include "twelveE.xbm"
+# include "thirteenE.xbm"
+# include "fourteenE.xbm"
+# include "fifteenE.xbm"
 # include "colonE.xbm"
+# include "underbarE.xbm"
 # include "slashE.xbm"
 FONT(E);
 
@@ -140,7 +181,14 @@ FONT(E);
 # include "sevenF.xbm"
 # include "eightF.xbm"
 # include "nineF.xbm"
+# include "tenF.xbm"
+# include "elevenF.xbm"
+# include "twelveF.xbm"
+# include "thirteenF.xbm"
+# include "fourteenF.xbm"
+# include "fifteenF.xbm"
 # include "colonF.xbm"
+# include "underbarF.xbm"
 # include "slashF.xbm"
 FONT(F);
 
@@ -165,13 +213,14 @@ static int be_a_pig;
 static int minutes_only;
 static int show_date_initally;
 static enum { MMDDYY, DDMMYY, YYMMDD, YYDDMM, MMYYDD, DDYYMM } date_format;
+static int hex_time;
 
 static Pixmap pixmap;
 static GC pixmap_draw_gc, pixmap_erase_gc;
 static GC window_draw_gc, window_erase_gc;
 static XColor fg_color, bg_color, bd_color;
 
-static struct frame *base_frames [10];
+static struct frame *base_frames [16];
 static struct frame *orig_frames [6];
 static struct frame *current_frames [6];
 static struct frame *target_frames [6];
@@ -189,14 +238,17 @@ static enum date_state { DTime, DDateIn, DDate, DDateOut, DDateOut2,
                          DDash, DDash2 }
   display_date;
 
-static Pixmap memory_pig_zeros [9] [10];
-static Pixmap memory_pig_digits [8] [10];
-static Pixmap total_oinker_digits [9] [10];
+static Pixmap memory_pig_zeros [15] [10];
+static Pixmap memory_pig_digits [14] [10];
+static Pixmap total_oinker_digits [15] [10];
 
 #undef MAX
 #undef MIN
 #define MAX(a, b) ((a)>(b)?(a):(b))
 #define MIN(a, b) ((a)<(b)?(a):(b))
+
+#define NUM_DIGITS (hex_time ? 16 : 10)
+#define SECS_PER_MIN (hex_time ? 0xf : 60)
 
 typedef short unsigned int POS;
 
@@ -355,9 +407,10 @@ load_font (Screen *screen, char *fn)
       exit (-1);
     }
 
-  if (font->min_char_or_byte2 > '0' || font->max_char_or_byte2 < '9')
+  if (font->min_char_or_byte2 > '0' || font->max_char_or_byte2 < '9' ||
+      (hex_time && (font->min_char_or_byte2 > 'A' || font->max_char_or_byte2 < 'F')))
     {
-      fprintf (stderr, "%s: font %s doesn't contain characters '0'-'9'.\n",
+      fprintf (stderr, "%s: font %s doesn't contain all needed characters.\n",
                progname, fn);
       exit (-1);
     }
@@ -366,6 +419,26 @@ load_font (Screen *screen, char *fn)
   max_ascent  = font->min_bounds.ascent;
   max_descent = font->min_bounds.descent;
   for (i = '0'; i <= '9'; i++)
+    {
+      XCharStruct *ch = (font->per_char
+                         ? &font->per_char [i - font->min_char_or_byte2]
+                         : &font->min_bounds);
+      max_lbearing = MAX (max_lbearing, ch->lbearing);
+      max_rbearing = MAX (max_rbearing, ch->rbearing);
+      max_ascent  = MAX (max_ascent,  ch->ascent);
+      max_descent = MAX (max_descent, ch->descent);
+      if (ch->lbearing == ch->rbearing || ch->ascent == -ch->descent)
+        {
+          fprintf (stderr,
+              "%s: char '%c' has bbox %dx%d (%d - %d x %d + %d) in font %s\n",
+                   progname,
+                   i, ch->rbearing - ch->lbearing, ch->ascent + ch->descent,
+                   ch->rbearing, ch->lbearing, ch->ascent, ch->descent,
+                   fn);
+          exit (-1);
+        }
+    }
+  if (hex_time) for (i = 'A'; i <= 'F'; i++)
     {
       XCharStruct *ch = (font->per_char
                          ? &font->per_char [i - font->min_char_or_byte2]
@@ -400,13 +473,13 @@ load_font (Screen *screen, char *fn)
   gcvalues.foreground = 0L;
   erase_gc = XCreateGC (dpy, pixmap, GCForeground, &gcvalues);
 
-  for (i = 0; i <= 9; i++)
+  for (i = 0; i < NUM_DIGITS; i++)
     {
 /*      XCharStruct *ch = (font->per_char
                          ? &font->per_char [i + '0' - font->min_char_or_byte2]
                          : &font->min_bounds);*/
       char s[1];
-      s[0] = i + '0';
+      s[0] = i >= 10 ? i - 10 + 'A' : i + '0';
       XFillRectangle (dpy, pixmap, erase_gc, 0, 0,
                       character_width + 1, character_height + 1);
       XDrawString (dpy, pixmap, draw_gc, max_lbearing, max_ascent, s, 1);
@@ -423,10 +496,11 @@ load_font (Screen *screen, char *fn)
   {
     XCharStruct *ch1, *ch2;
     int maxl, maxr, w;
+    char s[2] = " ";
     if (font->per_char)
       {
-        ch1 = &font->per_char [':' - font->min_char_or_byte2];
-        ch2 = &font->per_char ['/' - font->min_char_or_byte2];
+        ch1 = &font->per_char [COLON_CHAR - font->min_char_or_byte2];
+        ch2 = &font->per_char [SLASH_CHAR - font->min_char_or_byte2];
       }
     else
       ch1 = ch2 = &font->min_bounds;
@@ -442,8 +516,8 @@ load_font (Screen *screen, char *fn)
                      w+1, character_height+1, 1);
     XFillRectangle (dpy, colon, erase_gc, 0, 0, w+1, character_height+1);
     XFillRectangle (dpy, slash, erase_gc, 0, 0, w+1, character_height+1);
-    XDrawString (dpy, colon, draw_gc, maxl+1, max_ascent, ":", 1);
-    XDrawString (dpy, slash, draw_gc, maxl+1, max_ascent, "/", 1);
+    s[0] = COLON_CHAR; XDrawString (dpy, colon, draw_gc, maxl+1, max_ascent, s, 1);
+    s[0] = SLASH_CHAR; XDrawString (dpy, slash, draw_gc, maxl+1, max_ascent, s, 1);
     colon_char_width = w;
   }
 
@@ -478,7 +552,7 @@ load_builtin_font (Screen *screen, Visual *visual, int which)
 
   character_width = character_height = 0;
 
-  for (i = 0; i < 10; i++)
+  for (i = 0; i < NUM_DIGITS; i++)
     {
       const struct raw_number *number = &nums [i];
       character_width = MAX (character_width, number->width);
@@ -492,13 +566,13 @@ load_builtin_font (Screen *screen, Visual *visual, int which)
   image->data = 0;
   XDestroyImage (image);
 
-  colon_char_width = MAX (nums [10].width, nums [11].width);
+  colon_char_width = MAX (nums [NUMS_COLON_INDEX].width, nums [NUMS_SLASH_INDEX].width);
   colon = XCreateBitmapFromData (dpy, RootWindowOfScreen (screen),
-                                 (char *) nums[10].bits,
-                                 nums[10].width, nums[10].height);
+                                 (char *) nums[NUMS_COLON_INDEX].bits,
+                                 nums[NUMS_COLON_INDEX].width, nums[NUMS_COLON_INDEX].height);
   slash = XCreateBitmapFromData (dpy, RootWindowOfScreen (screen),
-                                 (char *) nums[11].bits,
-                                 nums[11].width, nums[11].height);
+                                 (char *) nums[NUMS_SLASH_INDEX].bits,
+                                 nums[NUMS_SLASH_INDEX].width, nums[NUMS_SLASH_INDEX].height);
 }
 #endif /* BUILTIN_FONTS */
 
@@ -613,17 +687,28 @@ static void DUMP(Display *dpy, Window window, int tick)
 }
 #endif /* DRYRUN */
 
+static time_t
+current_clock (void)
+{
+  struct timeval tv;
+  struct tm *tp;
+  if (gettimeofday(&tv, NULL) == -1)
+    exit(-1);
+  tp = localtime(&tv.tv_sec);
+  tv.tv_sec += tp->tm_gmtoff;
+  tv.tv_sec %= 24*60*60;
+  return hex_time ? (512 * tv.tv_sec + 8 * tv.tv_usec / 15625) / 675 : tv.tv_sec;
+}
 
 static long
 fill_time_digits (void)
 {
 #ifdef DRYRUN
   static long clock = 799995420L;
-  struct tm *tm = localtime (&clock);
   clock++;
 #else  /* !DRYRUN */
-  time_t clock = time ((time_t *) 0);
-  struct tm *tm = localtime (&clock);
+  time_t now = time(NULL);
+  time_t clock = current_clock();
 #endif /* !DRYRUN */
   if (test_hack)
     {
@@ -640,27 +725,40 @@ fill_time_digits (void)
         display_date = DDash2;
       else if (display_date == DDash2)
         display_date = DTime;
-
-      if (countdown)
+      if (hex_time)
         {
-          int delta = countdown - clock;
-          if (delta < 0) delta = -delta;
-          tm->tm_sec = delta % 60;
-          tm->tm_min = (delta / 60) % 60;
-          tm->tm_hour = (delta / (60 * 60)) % 100;
-          twelve_hour_time = 0;
+	  time_digits [5] = 0; /* not used */
+	  time_digits [4] = (clock >> 0) & 0x0f;
+	  time_digits [3] = (clock >> 4) & 0x0f;
+	  time_digits [2] = (clock >> 8) & 0x0f;
+	  time_digits [1] = (clock >> 12) & 0x0f;
+	  time_digits [0] = (clock >> 16) & 0x0f; /* hopefully zero */
         }
-      if (twelve_hour_time && tm->tm_hour > 12) tm->tm_hour -= 12;
-      if (twelve_hour_time && tm->tm_hour == 0) tm->tm_hour = 12;
-      time_digits [0] = (tm->tm_hour - (tm->tm_hour % 10)) / 10;
-      time_digits [1] = tm->tm_hour % 10;
-      time_digits [2] = (tm->tm_min - (tm->tm_min % 10)) / 10;
-      time_digits [3] = tm->tm_min % 10;
-      time_digits [4] = (tm->tm_sec - (tm->tm_sec % 10)) / 10;
-      time_digits [5] = tm->tm_sec % 10;
+      else
+	{
+	  struct tm *tm = localtime (&now);
+	  if (countdown)
+	    {
+	      int delta = countdown - clock;
+	      if (delta < 0) delta = -delta;
+	      tm->tm_sec = delta % 60;
+	      tm->tm_min = (delta / 60) % 60;
+	      tm->tm_hour = (delta / (60 * 60)) % 100;
+	      twelve_hour_time = 0;
+	    }
+          if (twelve_hour_time && tm->tm_hour > 12) tm->tm_hour -= 12;
+          if (twelve_hour_time && tm->tm_hour == 0) tm->tm_hour = 12;
+	  time_digits [0] = (tm->tm_hour - (tm->tm_hour % 10)) / 10;
+	  time_digits [1] = tm->tm_hour % 10;
+	  time_digits [2] = (tm->tm_min - (tm->tm_min % 10)) / 10;
+	  time_digits [3] = tm->tm_min % 10;
+	  time_digits [4] = (tm->tm_sec - (tm->tm_sec % 10)) / 10;
+	  time_digits [5] = tm->tm_sec % 10;
+        }
     }
   else
     {
+      struct tm *tm = localtime (&now);
       int m0,m1,d0,d1,y0,y1;
       tm->tm_mon++; /* 0 based */
       m0 = (tm->tm_mon - (tm->tm_mon % 10)) / 10;
@@ -743,7 +841,7 @@ fill_pig_cache (Display *dpy, Drawable drawable, struct frame *work_frame)
      We have very little to gain by caching the `[347]' to `0' transitions,
      but what the hell.
    */
-  for (i = 0; i < 9; i++)
+  for (i = 0; i < NUM_DIGITS-1; i++)
     {
       int tick;
       orig_frame = base_frames [0];
@@ -762,7 +860,7 @@ fill_pig_cache (Display *dpy, Drawable drawable, struct frame *work_frame)
         }
     }
   /* do `[1-8]' to `[2-9]' */
-  for (i = 0; i < 8; i++)
+  for (i = 0; i < NUM_DIGITS-2; i++)
     {
       int tick;
       orig_frame = base_frames [i+1];
@@ -782,10 +880,10 @@ fill_pig_cache (Display *dpy, Drawable drawable, struct frame *work_frame)
     }
   if (be_a_pig > 1)
     /* do `[1-7]' to `[3-9]' and `9' to `1' */
-    for (i = 0; i < 9; i++)
+    for (i = 0; i < NUM_DIGITS-1; i++)
       {
         int tick;
-        if (i == 7) continue; /* zero transitions are already done */
+        if (i == NUM_DIGITS-3) continue; /* zero transitions are already done */
         orig_frame = base_frames [i+1];
         set_current_scanlines (work_frame, orig_frame);
         for (tick = 9; tick >= 0; tick--)
@@ -798,7 +896,7 @@ fill_pig_cache (Display *dpy, Drawable drawable, struct frame *work_frame)
             flush_segment_buffer (dpy, p, pixmap_draw_gc);
             total_oinker_digits [i] [9 - tick] = p;
             if (tick)
-              one_step (orig_frame, work_frame, base_frames [(i+3)%10], tick);
+              one_step (orig_frame, work_frame, base_frames [(i+3)%NUM_DIGITS], tick);
           }
       }
 }
@@ -852,7 +950,7 @@ initialize_window (Screen *screen, Window window, Bool external_p)
   XSetWindowAttributes attributes;
   unsigned long attribute_mask;
   XGCValues gcvalues;
-  int ndigits = minutes_only ? 4 : 6;
+  int ndigits = minutes_only ? 4 : (hex_time ? 5 : 6);
 
   XGetWindowAttributes (dpy, window, &xgwa);
 #ifdef HAVE_SHAPE
@@ -889,7 +987,7 @@ initialize_window (Screen *screen, Window window, Bool external_p)
 
   /* Center stuff in window correctly when first created */
   {
-    int width = x_offsets [minutes_only ? 3 : 5] + character_width;
+    int width = x_offsets [minutes_only ? 3 : (hex_time ? 4 : 5)] + character_width;
     if (do_shape || do_overlay)
       window_offset_x = window_offset_y = 0;
     else
@@ -974,6 +1072,7 @@ get_resources (Screen *screen)
   display_date = show_date_initally ? DDate : DTime;
 
   minutes_only = !get_boolean_resource ("seconds", "Seconds");
+  hex_time = get_boolean_resource ("hex", "Hex");
   font_name = get_string_resource ("font", "Font");
 #ifdef BUILTIN_FONTS
   use_builtin_font = -1;
@@ -1112,9 +1211,11 @@ initialize_digital (Screen *screen, Visual *visual, Colormap cmap,
   *bgP = bg_color.pixel;
   *bdP = bd_color.pixel;
 
-  ndigits = (minutes_only ? 4 : 6);
+  ndigits = (minutes_only ? 4 : (hex_time ? 5 : 6));
   *widthP = x_offsets [ndigits-1] + character_width;
   *heightP = character_height;
+
+  tzset(); /* to get timezone */
 }
 
 
@@ -1123,7 +1224,7 @@ run_digital (Screen *screen, Window window, Bool external_p)
 {
   Display *dpy = DisplayOfScreen (screen);
   int i;
-  int ndigits = (minutes_only ? 4 : 6);
+  int ndigits = (minutes_only ? 4 : (hex_time ? 5 : 6));
   XWindowAttributes xgwa;
   XGetWindowAttributes (dpy, window, &xgwa);
   initialize_window (screen, window, external_p);
@@ -1151,8 +1252,7 @@ run_digital (Screen *screen, Window window, Bool external_p)
   while (1)
     {
       int n, tick;
-      long clock;
-      static int date = 0, was = 0;
+      time_t clock;
       int different_minute;
       enum date_state odate = display_date;
 
@@ -1196,7 +1296,7 @@ run_digital (Screen *screen, Window window, Bool external_p)
               if (target_frames [j])
                 {
                   if (be_a_pig > 0 && time_digits [j] == 0 &&
-                      last_time_digits [j] >= 0)
+                      last_time_digits [j] > 0)
                     {
                       Pixmap p =
                         memory_pig_zeros [last_time_digits [j] - 1] [tick];
@@ -1205,7 +1305,7 @@ run_digital (Screen *screen, Window window, Bool external_p)
                                   x_offsets [j], 0, 1);
                     }
                   else if (be_a_pig > 0 && last_time_digits [j] == 0 &&
-                           time_digits [j] >= 0)
+                           time_digits [j] > 0)
                     {
                       Pixmap p =
                         memory_pig_zeros [time_digits [j] - 1] [9 - tick];
@@ -1236,7 +1336,7 @@ run_digital (Screen *screen, Window window, Bool external_p)
 
                   else if (be_a_pig > 1 && last_time_digits [j] >= 0 &&
                            time_digits [j] == ((last_time_digits [j] + 2)
-                                               % 10))
+                                               % NUM_DIGITS))
                     {
                       Pixmap p =
                         total_oinker_digits [last_time_digits[j] - 1] [9-tick];
@@ -1246,7 +1346,7 @@ run_digital (Screen *screen, Window window, Bool external_p)
                     }
                   else if (be_a_pig > 1 && time_digits [j] >= 0 &&
                            last_time_digits [j] == ((time_digits [j] + 2)
-                                                    % 10))
+                                                    % NUM_DIGITS))
                     {
                       Pixmap p =
                         total_oinker_digits [time_digits [j] - 1] [tick];
@@ -1290,31 +1390,6 @@ run_digital (Screen *screen, Window window, Bool external_p)
                         window_offset_x + (wander_x - (character_width / 2)),
                         window_offset_y + (wander_y - (character_height / 2)),
                         1);
-          if (date == 0)
-            {
-              struct tm tm;
-              memset(&tm, 0, sizeof(tm));
-              tm.tm_year = 100;
-              tm.tm_mday = 1;
-              tm.tm_isdst = -1;
-              date = mktime(&tm);
-              was = (clock >= date);
-            }
-          if (!was && clock >= date)
-            {
-              int j, k;
-              be_a_pig = was = -1;
-              memset (time_digits, -1, sizeof(time_digits));
-              for (i = 0; i < sizeof(base_frames)/sizeof(*base_frames); i++)
-                for (j = 0; j < character_height; j++)
-                  for (k = 0; k < MAX_SEGS_PER_LINE; k++)
-                    {
-# define SHIFT(x) x=character_width-x
-                      SHIFT(base_frames[i]->scanlines[j].left[k]);
-                      SHIFT(base_frames[i]->scanlines[j].right[k]);
-# undef SHIFT
-                    }
-            }
           if (do_cycle && no_writable_cells)
             fill_borders (dpy, window, window_erase_gc,
                           window_offset_x + (wander_x - (character_width / 2)),
@@ -1378,10 +1453,9 @@ run_digital (Screen *screen, Window window, Bool external_p)
            or by select()ing on the display file descriptor, but that
            would be more work.
          */
-        time_t now = time ((time_t *) 0);
-        struct tm *tm = localtime (&now);
-        long target = now + (60 - tm->tm_sec);
-        while ((now = time ((time_t *) 0)) < target)
+        time_t now = current_clock();
+        time_t target = clock + SECS_PER_MIN - clock%SECS_PER_MIN;
+        while (now < target && now > clock) /* hack to allow midnight roll-overs */
           {
             /* if event_loop returns true, we need to go and repaint stuff
                right now, instead of waiting for the minute to elapse.
@@ -1389,7 +1463,7 @@ run_digital (Screen *screen, Window window, Bool external_p)
             if (event_loop (screen, window, external_p))
               break;
 
-            if (now == target-1)        /* the home stretch; sync up */
+            if (now >= target-1)        /* the home stretch; sync up */
               TICK_SLEEP ();
             else
               {
@@ -1398,6 +1472,7 @@ run_digital (Screen *screen, Window window, Bool external_p)
                                 window, window_draw_gc, window_erase_gc);
                 SEC_SLEEP ();
               }
+	    now = current_clock();
           }
       }
     else
@@ -1409,11 +1484,9 @@ run_digital (Screen *screen, Window window, Bool external_p)
            were started, and scheduling delays.  (It's the details like this
            that make the difference between a True Hack and just another app.)
          */
-        long now = clock;
-        while (clock == now)
+        while (current_clock() == clock)
           {
             TICK_SLEEP ();
-            now = time ((time_t *) 0);
             /* if event_loop returns true, we need to go and repaint stuff
                right now, instead of waiting for the second to elapse.
              */
@@ -1504,12 +1577,16 @@ event_loop (Screen *screen, Window window, Bool external_p)
 #endif /* !VMS */
             case ' ':
               twelve_hour_time = !twelve_hour_time;
-              if (twelve_hour_time &&
+              if (!hex_time && twelve_hour_time &&
                   time_digits [0] == 0 &&
                   time_digits [1] != 0)
                 last_time_digits [0] = -2; /* evil hack */
               redraw_p = 1;
               break;
+	    case 'h':
+	      hex_time = !hex_time;
+              redraw_p = 1;
+	      break;
             case '0': case '1': case '2': case '3': case '4': case '5':
             case '6': case '7': case '8': case '9': case '-':
               if (event.xkey.state)
@@ -1539,7 +1616,7 @@ event_loop (Screen *screen, Window window, Bool external_p)
           break;
         case ConfigureNotify:
           {
-            int width = x_offsets [minutes_only ? 3 : 5] + character_width;
+            int width = x_offsets [minutes_only ? 3 : (hex_time ? 4 : 5)] + character_width;
 
             window_offset_x = (event.xconfigure.width - width) / 2;
             window_offset_y = (event.xconfigure.height - character_height) / 2;
@@ -1554,7 +1631,7 @@ event_loop (Screen *screen, Window window, Bool external_p)
                    when the window is resized, this isn't a big performance
                    problem like updating it 10x/second is.
                  */
-                int ndigits = (minutes_only ? 4 : 6);
+                int ndigits = (minutes_only ? 4 : (hex_time ? 5 : 6));
                 int w = x_offsets [ndigits-1] + character_width;
                 int h = character_height + 1;
                 Pixmap p =
