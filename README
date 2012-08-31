@@ -50,7 +50,13 @@ You don't really have to "build" it, because it's all Javascript!
 
 ==============================================================================
 
-    ??-???-10 (v2.35)   All platforms:
+    23-Apr-12 (v2.36)   OSX:
+                        - Fixed a startup crash on 10.7.
+                        - Added a preference to keep the Dali Clock window
+                          above even the screen saver window.
+                        - "Upgraded" to XCode 4.0, which means that 10.4 PPC
+                          builds are impossible, and Intel is now required.
+    18-Aug-10 (v2.35)   All platforms:
                         - Regenerated font images for smoother animation.
                         iPhone, iPad:
                         - Higher resolution display (and icons) on iPhone 4.

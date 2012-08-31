@@ -4,7 +4,7 @@ SHELL		= /bin/sh
 TARFILES	= README Makefile version.h \
 		  config.guess config.sub install-sh \
 		  mac128/README mac128/*.*
-NUMBERS		= font/*.pl font/dalifont*.{gif,gz} font/*.xbm
+NUMBERS		= font/dalifont*.{gif,gz} font/*.xbm
 TAR		= tar
 
 
@@ -186,25 +186,17 @@ www::
   diff -U0 index.html $$TMP ;						    \
   echo '' ;								    \
 									    \
-  OLDEST=`ls xdaliclock*.tar.gz | head -1` ;				    \
-  /bin/echo -n "Delete $$DEST/$$OLDEST? ";				    \
-  read line;								    \
-  if [ "x$$line" = "xyes" -o "x$$line" = "xy" ]; then			    \
-    set -x ;								    \
-    rm $$OLDEST ;							    \
-    cvs remove $$OLDEST ;						    \
-    set +x ;								    \
-  fi ;									    \
-									    \
-  OLDEST=`ls DaliClock*.dmg | head -1` ;				    \
-  /bin/echo -n "Delete $$DEST/$$OLDEST? ";				    \
-  read line;								    \
-  if [ "x$$line" = "xyes" -o "x$$line" = "xy" ]; then			    \
-    set -x ;								    \
-    rm $$OLDEST $$OLDEST2 ;						    \
-    cvs remove $$OLDEST $$OLDEST2 ;					    \
-    set +x ;								    \
-  fi ;									    \
+  for EXT in tar.gz dmg ; do						    \
+    OLDEST=`ls xdaliclock*.$$EXT | fgrep -v 235.dmg | head -n 1` ;	    \
+    /bin/echo -n "Delete $$DEST/$$OLDEST? ";				    \
+    read line;								    \
+    if [ "x$$line" = "xyes" -o "x$$line" = "xy" ]; then			    \
+      set -x ;								    \
+      rm $$OLDEST ;							    \
+      cvs remove $$OLDEST ;						    \
+      set +x ;								    \
+    fi ;								    \
+  done ;								    \
 									    \
   cat $$TMP > index.html ;						    \
   rm -f $$TMP ;								    \
