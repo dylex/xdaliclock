@@ -1,6 +1,5 @@
 /* xdaliclock - a melting digital clock
- * Copyright (c) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
- *               2002, 2003, 2006 Jamie Zawinski <jwz@jwz.org>
+ * Copyright (c) 1991-2010 Jamie Zawinski <jwz@jwz.org>
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -451,8 +450,8 @@ where options include\n\
   -showdate                     Show the date initially.\n\
   -seconds                      Display seconds (default).\n\
   -noseconds                    Don't display seconds.\n\
-  -cycle                        Do color-cycling.\n\
-  -nocycle                      Don't do color-cycling (default).\n\
+  -cycle                        Do color-cycling (default).\n\
+  -nocycle                      Don't do color-cycling.\n\
   -hex				Display hex time.\n\
   -nohex			Display decimal time (default).\n\
   -countdown <date>             Display a countdown instead of a clock.\n\
