@@ -17,7 +17,7 @@ There's also an unfinished GTK port in here.  See gtk/README for details.
 
 ==============================================================================
 
-To build for MacOS X (10.4 or later) or iPhone:
+To build for MacOS X (10.4 or later) or iOS:
 
     cd xdaliclock/OSX/
     make
@@ -50,167 +50,186 @@ You don't really have to "build" it, because it's all Javascript!
 
 ==============================================================================
 
-    23-Apr-12 (v2.36)   OSX:
-                        - Fixed a startup crash on 10.7.
-                        - Added a preference to keep the Dali Clock window
-                          above even the screen saver window.
-                        - "Upgraded" to XCode 4.0, which means that 10.4 PPC
-                          builds are impossible, and Intel is now required.
-    18-Aug-10 (v2.35)   All platforms:
-                        - Regenerated font images for smoother animation.
-                        iPhone, iPad:
-                        - Higher resolution display (and icons) on iPhone 4.
-                        - Fixed a display glitch when zooming.
-                        - Fixed an occasional rotation twitch on iPad.
-                        X11:
-                        - Turned on -cycle by default.
-    19-May-10 (v2.34)   iPhone:
-                        - When docked, don't automatically turn screen off.
-                        - Briefly display the date every minute or so.
-                        - Made rotation less twitchy.
-                        - Fixed off-by-one in date display.
-                        OSX:
-                        - Animate while resizing window.
-    24-Apr-10 (v2.33)   iPhone, OSX, WebOS:
-                        - Keep the clock centered in the window even when
-                          in 12 hour mode where the hour is one digit, and
-                          animate the centering transition.
-                        OSX:
-                        - Eliminated flicker when a transparent Dali Clock
-                          window is on top of a window that is playing video.
-                        iPhone:
-                        - Animate rotation/scaling during orientation changes.
-                        - Submitted to Apple iTunes Store.
-    20-Apr-10 (v2.32)   iPhone:
-                        - Fixed a startup crash.
-                        - Rotation and pinch-zooming works reliably.
-    18-Apr-10 (v2.31)   OSX:
-                        - Tweaks to Mac OS 10.6 build process.
-                        - Rewrote rendering engine in OpenGL / OpenGLES.
-                        - The colons and dashes morph now too.
-                        iPhone:
-                        - Works now!
-                        X11:
-                        - Added -showdate option so you can run two copies,
-                          one showing the date and one showing the time.
-    01-Sep-09 (v2.30)   OSX:
-                        - Ported to Mac OS 10.6.
-    15-Jul-09 (v2.29)   Palm WebOS:
-                        - Palm's API changed; need to un-escape HTML.
-    06-Jul-09 (v2.28)   Palm WebOS:
-                        - Slight performance improvements.
-                        OSX:
-                        - A little more work on the unfinished iPhone port.
-    27-Jun-09 (v2.27)   Palm WebOS:
-                        - Cosmetic animation and preferences improvements.
-                        - Factored out Javascript code so it can be used
-                          stand-alone.
-    26-Jun-09 (v2.26)   Palm WebOS:
-                        - Initial port!
-                        PalmOS "Classic":
-                        - Eliminated a slight flicker during animation.
-                        OSX:
-                        - Initial incomplete, aborted attempt at iPhone port.
-    12-Nov-07 (v2.25)   OSX:
-                        - Added a Dali Clock dashboard widget.
-    28-Apr-07 (v2.24)   OSX:
-                        - Added a Dali Clock screen saver.
-                        - Better application icon.
-                        PalmOS:
-                        - Fixed bug where the background colors of the digits
-                          and of the rest of the window were slightly out of
-                          sync.
-                        - Don't draw while menubar is active.
-                        - Display day-of-month in seconds-only mode.
-                        - Color application icons.
-    08-Jan-06 (v2.23)   OSX:
-                        - prettier preferences panel.
-                        PalmOS:
-                        - smoother morphing;
-                        - bigger "seconds only" font;
-                        - color cycling on color devices.
-                        X11:
-                        - smoother morphing;
-                        - better color cycling contrast;
-                        - added three new, larger built-in fonts.
-    02-Jan-06 (v2.22)   MacOS fixes:
-                        - Coming out of full-screen mode no longer leaves
-                          the window in a huge size if the title bar had
-                          been turned off.
-                        - Full screen mode hides the mouse pointer.
-                        - ESC exits full screen mode.
-                        - Build a universal binary (PPC and Intel).
-                        - Added "Pin to desktop" preference.
-                        - Minimize (Cmd-M) and Close (Cmd-W) work when
-                          borderless or full screen.
-    31-Dec-05 (v2.21)   Ported to MacOS X!
-    07-Sep-03 (v2.20)   Updated "vroot.h" for compatibility with latest
-    07-Sep-03 (v2.20)   Updated "vroot.h" for compatibility with latest
-                        xscreensaver (-root in Xinerama mode.)
-                        Include various historical Macintosh predecessors in
-                        the mac128/ subdirectory.
-    11-Sep-02 (v2.19)   Added -window-id option, for use by xscreensaver-demo.
-                        Handle exposure events in "-root -noseconds" mode.
-                        Updated the PalmOS source to work with PalmOS SDK 4.0.
-                        Fixed a dumb bug in the PalmOS preferences where you
-                        couldn't set the FPS to exactly "10".
-                        Updated make.com for VMS.
-    29-Nov-99 (v2.18)   Oops, month number was off by one in the Palm version.
-    28-Nov-99 (v2.17)   Now uses `configure' instead of `Imake'.
-                        ANSI C is now required.
-                        Ported to Palm Pilot.
-    12-Nov-99 (v2.16)   Fixed some warnings, cleaned up the fonts some more.
-    11-Nov-99 (v2.15)   Added two new (smaller) builtin fonts, bringing the
-                        total to four.  The smallest one is 27 pixels high,
-                        and is cleaner looking than any X font I've seen at
-                        that size...
-     4-Jan-99 (v2.14)   Fixed a bug that caused X errors on some systems with
-                        PseudoColor visuals when using `-transparent'.
-                        Some portability fixes for OpenVMS.
-                        Added `xdaliclock.spec' so that everyone builds their
-                        RPMs in the same way.
-     7-Nov-98 (v2.13)   Put a brain-dead simple date parser in `-countdown'.
-                        Updated my email address and home page.
-     6-Nov-98 (v2.12)   Botched, please ignore.
-    31-Dec-97 (v2.11)   Added cheesy `-countdown' switch.  Happy new year...
-    25-Jun-97 (v2.10)   Fixed a bad interaction with xscreensaver...
-     2-Jun-97 (v2.09)   Renamed -shape to -transparent, and made it use
-                        SERVER_OVERLAY_VISUALS if available -- that makes the
-                        option actually be *usable* on SGIs and on advanced HP,
-                        DEC, or IBM systems (since overlay visuals actually
-                        work, unlike the Shape extension.)
-    30-Aug-96 (v2.08)   Fixed a lingering bug where sometimes clicking would
-                        not cause the date to be displayed.
-    23-Feb-96 (v2.07)   Added WM_COMMAND property for session management.
-                        More better VMS support from Martin Zinser.
-    24-Dec-95 (v2.06)   Made -cycle work on non-PseudoColor visuals.
-                        Fixed a couple of shape-related bugs.
-     8-Jan-95 (v2.05)   Fixed a silly bug in determining the visual and cmap
-                        to use in -root mode, which caused it to not work with
-                        xscreensaver when the saver wasn't using the default
-                        visual and cmap.
-     8-Nov-94 (v2.04)   Some fixes for SGIs and non-default visuals.
-    31-May-94 (v2.03)   Minor tweaks to Imakefile; submitted for X11r6 contrib.
-    21-May-94 (v2.01)   VMS and R3 support, with help from Richard L. Dyson
-                        <dyson@sunfish.physics.uiowa.edu>.
-    16-May-94 (v2.00)   Converted to use Xt instead of raw Xlib.
-     4-Sep-93 (v1.07)   Fixed shape handling; some minor portability changes.
-     3-Feb-93 (v1.06)   Fixed some memory errors.
-    10-Jun-92 (v1.05)   More from Tony Kennedy: support visuals with different
-                        depths from default, center digits correctly in
-                        initial window, and merge geometry defaults in a more
-                        sophisticated way.  Merged in a slightly reworked
-                        version of more general segment-handling code from
-                        Dan Wallach <c169-bg@auriga.berkeley.edu>.  Added a
-                        second, even bigger builtin font.  Added the -root
-                        and -fullscreen arguments.
-     4-Jun-92 (v1.04)   More VMS support for resource database files, from
-                        Tony Kennedy <adk@scri.fsu.edu>.
-    16-Jan-92 (v1.03)   Added more intelligent visual support.
-                        Made it not die on fonts without per-char info.
-     3-Jan-92 (v1.02)   Merged in VMS support from Daniel C. Newman
-                        <dan@innosoft.com>.
-    26-Oct-91 (v1.01)   Fixed Expose handling in -noseconds mode;
-                        access() called with too few args;
-                        added resource for MM/DD/YY, DD/MM/YY, etc.
-     7-Oct-91 (v1.00)   Submitted for X11r5 contrib tape.
+2.41  18-Mar-2014	OSX:
+			- Fixed start-up rotation and credits display on iOS 7.
+                        - Suppress status bar (again) on iOS 7.
+2.40  27-Nov-2013	OSX:
+			- Added "Check for Updates".
+2.39  16-Jul-2013	All platforms:
+			- Tweaked character outlines for smoother morphing.
+			iPhone:
+			- Fixed crash when rotating on Retina iPads.
+			OSX:
+			- Fixed crash when running in full screen or as a
+			  screen saver on really old machines.
+2.38  08-Jul-2013	OSX:
+			- Toggling window title bar preserves transparency.
+			- Transparency works in full-screen mode.
+			- Screen saver preferences weren't being saved.
+			- Fixed bug where System Preferences window went black.
+			- Possibly fixed an intermittent startup crash.
+2.37  22-Sep-2012	iPhone:
+			- Support for iPhone 5's new screen size.
+2.36  23-Apr-2012	OSX:
+			- Fixed a startup crash on 10.7.
+			- Added a preference to keep the Dali Clock window
+			  above even the screen saver window.
+			- "Upgraded" to XCode 4.0, which means that 10.4 PPC
+			  builds are impossible, and Intel is now required.
+2.35  18-Aug-2010	All platforms:
+			- Regenerated font images for smoother animation.
+			iPhone, iPad:
+			- Higher resolution display (and icons) on iPhone 4.
+			- Fixed a display glitch when zooming.
+			- Fixed an occasional rotation twitch on iPad.
+			X11:
+			- Turned on -cycle by default.
+2.34  19-May-2010	iPhone:
+			- When docked, don't automatically turn screen off.
+			- Briefly display the date every minute or so.
+			- Made rotation less twitchy.
+			- Fixed off-by-one in date display.
+			OSX:
+			- Animate while resizing window.
+2.33  24-Apr-2010	iPhone, OSX, WebOS:
+			- Keep the clock centered in the window even when
+			  in 12 hour mode where the hour is one digit, and
+			  animate the centering transition.
+			OSX:
+			- Eliminated flicker when a transparent Dali Clock
+			  window is on top of a window that is playing video.
+			iPhone:
+			- Animate rotation/scaling during orientation changes.
+			- Submitted to Apple iTunes Store.
+2.32  20-Apr-2010	iPhone:
+			- Fixed a startup crash.
+			- Rotation and pinch-zooming works reliably.
+2.31  18-Apr-2010	OSX:
+			- Tweaks to Mac OS 10.6 build process.
+			- Rewrote rendering engine in OpenGL / OpenGLES.
+			- The colons and dashes morph now too.
+			iPhone:
+			- Works now!
+			X11:
+			- Added -showdate option so you can run two copies,
+			  one showing the date and one showing the time.
+2.30  01-Sep-2009	OSX:
+			- Ported to Mac OS 10.6.
+2.29  15-Jul-2009	Palm WebOS:
+			- Palm's API changed; need to un-escape HTML.
+2.28  06-Jul-2009	Palm WebOS:
+			- Slight performance improvements.
+			OSX:
+			- A little more work on the unfinished iPhone port.
+2.27  27-Jun-2009	Palm WebOS:
+			- Cosmetic animation and preferences improvements.
+			- Factored out Javascript code so it can be used
+			  stand-alone.
+2.26  26-Jun-2009	Palm WebOS:
+			- Initial port!
+			PalmOS "Classic":
+			- Eliminated a slight flicker during animation.
+			OSX:
+			- Initial incomplete, aborted attempt at iPhone port.
+2.25  12-Nov-2007	OSX:
+			- Added a Dali Clock dashboard widget.
+2.24  28-Apr-2007	OSX:
+			- Added a Dali Clock screen saver.
+			- Better application icon.
+			PalmOS:
+			- Fixed bug where the background colors of the digits
+			  and of the rest of the window were slightly out of
+			  sync.
+			- Don't draw while menubar is active.
+			- Display day-of-month in seconds-only mode.
+			- Color application icons.
+2.23  08-Jan-2006	OSX:
+			- prettier preferences panel.
+			PalmOS:
+			- smoother morphing;
+			- bigger "seconds only" font;
+			- color cycling on color devices.
+			X11:
+			- smoother morphing;
+			- better color cycling contrast;
+			- added three new, larger built-in fonts.
+2.22  02-Jan-2006	MacOS fixes:
+			- Coming out of full-screen mode no longer leaves
+			  the window in a huge size if the title bar had
+			  been turned off.
+			- Full screen mode hides the mouse pointer.
+			- ESC exits full screen mode.
+			- Build a universal binary (PPC and Intel).
+			- Added "Pin to desktop" preference.
+			- Minimize (Cmd-M) and Close (Cmd-W) work when
+			  borderless or full screen.
+2.21  31-Dec-2005	Ported to MacOS X!
+2.20  07-Sep-2003	Updated "vroot.h" for compatibility with latest
+			xscreensaver (-root in Xinerama mode.)
+			Include various historical Macintosh predecessors in
+			the mac128/ subdirectory.
+2.19  11-Sep-2002	Added -window-id option, for use by xscreensaver-demo.
+			Handle exposure events in "-root -noseconds" mode.
+			Updated the PalmOS source to work with PalmOS SDK 4.0.
+			Fixed a dumb bug in the PalmOS preferences where you
+			couldn't set the FPS to exactly "10".
+			Updated make.com for VMS.
+2.18  29-Nov-1999	Oops, month number was off by one in the Palm version.
+2.17  28-Nov-1999	Now uses `configure' instead of `Imake'.
+			ANSI C is now required.
+			Ported to Palm Pilot.
+2.16  12-Nov-1999	Fixed some warnings, cleaned up the fonts some more.
+2.15  11-Nov-1999	Added two new (smaller) builtin fonts, bringing the
+			total to four.	The smallest one is 27 pixels high,
+			and is cleaner looking than any X font I've seen at
+			that size...
+2.14  04-Jan-1999	Fixed a bug that caused X errors on some systems with
+			PseudoColor visuals when using `-transparent'.
+			Some portability fixes for OpenVMS.
+			Added `xdaliclock.spec' so that everyone builds their
+			RPMs in the same way.
+2.13  07-Nov-1998	Put a brain-dead simple date parser in `-countdown'.
+			Updated my email address and home page.
+2.12  06-Nov-1998	Botched, please ignore.
+2.11  31-Dec-1997	Added cheesy `-countdown' switch.  Happy new year...
+2.10  25-Jun-1997	Fixed a bad interaction with xscreensaver...
+2.09  02-Jun-1997	Renamed -shape to -transparent, and made it use
+			SERVER_OVERLAY_VISUALS if available -- that makes the
+			option actually be *usable* on SGIs and on advanced HP,
+			DEC, or IBM systems (since overlay visuals actually
+			work, unlike the Shape extension.)
+2.08  30-Aug-1996	Fixed a lingering bug where sometimes clicking would
+			not cause the date to be displayed.
+2.07  23-Feb-1996	Added WM_COMMAND property for session management.
+			More better VMS support from Martin Zinser.
+2.06  24-Dec-1995	Made -cycle work on non-PseudoColor visuals.
+			Fixed a couple of shape-related bugs.
+2.05  08-Jan-1995	Fixed a silly bug in determining the visual and cmap
+			to use in -root mode, which caused it to not work with
+			xscreensaver when the saver wasn't using the default
+			visual and cmap.
+2.04  08-Nov-1994	Some fixes for SGIs and non-default visuals.
+2.03  31-May-1994	Minor tweaks to Imakefile; submitted for X11r6 contrib.
+2.01  21-May-1994	VMS and R3 support, with help from Richard L. Dyson
+			<dyson@sunfish.physics.uiowa.edu>.
+2.00  16-May-1994	Converted to use Xt instead of raw Xlib.
+1.07  04-Sep-1993	Fixed shape handling; some minor portability changes.
+1.06  03-Feb-1993	Fixed some memory errors.
+1.05  10-Jun-1992	More from Tony Kennedy: support visuals with different
+			depths from default, center digits correctly in
+			initial window, and merge geometry defaults in a more
+			sophisticated way.  Merged in a slightly reworked
+			version of more general segment-handling code from
+			Dan Wallach <c169-bg@auriga.berkeley.edu>.  Added a
+			second, even bigger builtin font.  Added the -root
+			and -fullscreen arguments.
+1.04  04-Jun-1992	More VMS support for resource database files, from
+			Tony Kennedy <adk@scri.fsu.edu>.
+1.03  16-Jan-1992	Added more intelligent visual support.
+			Made it not die on fonts without per-char info.
+1.02  03-Jan-1992	Merged in VMS support from Daniel C. Newman
+			<dan@innosoft.com>.
+1.01  26-Oct-1991	Fixed Expose handling in -noseconds mode;
+			access() called with too few args;
+			added resource for MM/DD/YY, DD/MM/YY, etc.
+1.00  07-Oct-1991	Submitted for X11r5 contrib tape.

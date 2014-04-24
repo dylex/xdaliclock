@@ -4,7 +4,7 @@ SHELL		= /bin/sh
 TARFILES	= README Makefile version.h \
 		  config.guess config.sub install-sh \
 		  mac128/README mac128/*.*
-NUMBERS		= font/dalifont*.{gif,gz} font/*.xbm
+NUMBERS		= font/dalifont*.{gif,png,ai,psd.gz} font/*.xbm
 TAR		= tar
 
 
@@ -124,7 +124,7 @@ tar: X11/Makefile gtk/Makefile palm/Makefile dmg
       ` ";								    \
     cd $$d ; done ;							    \
   echo creating tar file archive/$${NAME}.tar.gz... ;			    \
-  GZIP="-9v" $(TAR) -vchzf archive/$${NAME}.tar.gz			    \
+  GZIP="-9v" $(TAR) -vczf archive/$${NAME}.tar.gz			    \
     `echo $(TARFILES) $$FILES $(NUMBERS)				    \
    | sed "s|^|$$NAME/|g; s| | $$NAME/|g" ` ;				    \
   rm $$NAME ;								    \
@@ -175,6 +175,8 @@ www::
   cp -p archive/$$DMG $$DEST/$$DMG ;					    \
   chmod u+w $$DEST/$$DMG ;						    \
 									    \
+  cp -p OSX/updates.xml $$DEST/ ;					    \
+									    \
   cd $$DEST ;								    \
 									    \
   TMP=/tmp/xd.$$$$ ;							    \
@@ -187,7 +189,7 @@ www::
   echo '' ;								    \
 									    \
   for EXT in tar.gz dmg ; do						    \
-    OLDEST=`ls xdaliclock*.$$EXT | fgrep -v 235.dmg | head -n 1` ;	    \
+    OLDEST=`ls *.$$EXT | fgrep -v 235.dmg | head -n 1` ;		    \
     /bin/echo -n "Delete $$DEST/$$OLDEST? ";				    \
     read line;								    \
     if [ "x$$line" = "xyes" -o "x$$line" = "xy" ]; then			    \
