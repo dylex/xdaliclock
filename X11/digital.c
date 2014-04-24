@@ -1129,10 +1129,10 @@ get_resources (Screen *screen)
     date_format = DDMMYY;
   else if (!strcasecmp (buf, "yymmdd") || !strcasecmp (buf, "yy/mm/dd") ||
            !strcasecmp (buf, "yy-mm-dd"))
-    date_format = YYMMDD;
+    date_format = minutes_only ? MMDDYY : YYMMDD;
   else if (!strcasecmp (buf, "yyddmm") || !strcasecmp (buf, "yy/dd/mm") ||
            !strcasecmp (buf, "yy-dd-mm"))
-    date_format = YYDDMM;
+    date_format = minutes_only ? DDMMYY : YYDDMM;
   else if (!strcasecmp (buf, "mmyydd") || !strcasecmp (buf, "mm/yy/dd") ||
            !strcasecmp (buf, "mm-yy-dd"))
     date_format = MMYYDD;
