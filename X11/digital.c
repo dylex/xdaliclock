@@ -392,7 +392,7 @@ load_font (Screen *screen, char *fn)
                  fn);
       }
   if (! font)
-    for (; fonts; fonts++)
+    for (; *fonts; fonts++)
       if ((font = XLoadQueryFont (dpy, fn = *fonts)))
         break;
   if (bad_font_name && font)
