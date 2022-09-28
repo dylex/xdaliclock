@@ -438,7 +438,7 @@ static void
 usage (void)
 {
   fprintf (stderr, "\n%s\n\
-                  http://www.jwz.org/xdaliclock/\n\n\
+                  https://www.jwz.org/xdaliclock/\n\n\
 usage: %s [ options ]\n\
 where options include\n\
 \n\

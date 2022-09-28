@@ -2,18 +2,16 @@
                               Dali Clock
                           by Jamie Zawinski
 
-                    http://www.jwz.org/xdaliclock/
+                    https://www.jwz.org/xdaliclock/
 
 ==============================================================================
 
 To build for the X Window System:
 
     cd xdaliclock/X11/
-    ./configure
+    ./configure --prefix=/usr
     make
-    make install
-
-There's also an unfinished GTK port in here.  See gtk/README for details.
+    sudo make install
 
 ==============================================================================
 
@@ -28,19 +26,39 @@ To build for MacOS X (10.4 or later) or iOS:
 
 ==============================================================================
 
+To build for the Pebble Smart Watch:
+
+   cd pebble
+   pebble build
+   (Assuming you have the Pebble SDK installed.)
+
+==============================================================================
+
+To build for Android devices:
+
+    Install JDK 7 (http://www.oracle.com/technetwork/java/javase/downloads/)
+    Install Android Studio (http://developer.android.com/sdk/)
+    cd xdaliclock/android/
+    make
+    (or you can open "DaliClock" as a project in Android Studio)
+
+    Then copy "build/DaliClock.apk" to your Android device.
+
+==============================================================================
+
 To build for PalmOS Classic devices:
 
     cd xdaliclock/palm/
-    ./configure --host=m68k-palmos --build=`../config.guess`
+    ./configure --host=m68k-palmos --build=`../X11//Xlib-classic/config.guess`
     make CFLAGS="-O3"
 
-Then install daliclock.prc on your device through your usual method.
+    Then install daliclock.prc on your device through your usual method.
 
-If you don't already have a working PalmOS cross-compilation environment
-set up, you'll need to install "m68k-palmos-gcc", "pilrc", "obj-res", and
-"build-prc" first.  This can be a lot of work -- you're on your own!
-Check http://www.palmos.com/dev/support/ to find the things you need.
-Check http://www.zenonez.com/prctoolsx/ for MacOS X build tools.
+    If you don't already have a working PalmOS cross-compilation environment
+    set up, you'll need to install "m68k-palmos-gcc", "pilrc", "obj-res", and
+    "build-prc" first.  This can be a lot of work -- you're on your own!
+    Check http://www.palmos.com/dev/support/ to find the things you need.
+    Check http://www.zenonez.com/prctoolsx/ for MacOS X build tools.
 
 ==============================================================================
 
@@ -50,6 +68,31 @@ You don't really have to "build" it, because it's all Javascript!
 
 ==============================================================================
 
+2.47  09-Sep-2022	X11:
+			- Implemented XScreenSaver support for GTK 3.
+2.46  28-Aug-2022	X11:
+			- Portability and installation fixes.
+2.45  25-Aug-2022	X11:
+			- Xlib version replaced with GTK 3 + OpenGL version.
+2.44  25-Dec-2018	OSX:
+			- Functions properly on macOS 10.14.
+			- Requires macOS 10.7 or later. Sigh.
+			- Upgraded Sparkle (the "Check for Updates" library).
+			- Signed, and available in the Mac App Store.
+			- Removed the "On top of screen saver" option since
+			  it can't be made to work on recent macOSes.
+			- Full resolution on Retina displays.
+			iOS:
+			- Rotation works again.
+			- Requires iOS 8.0 or later. Sigh.
+2.43  13-Apr-2015	Android:
+			- Bug fixes.
+2.42  10-Apr-2015	Pebble:
+			- Included Joshua Wise's Pebble Smart Watch port.
+			Android:
+			- Included Robin Müller-Cajar's Android port.
+			OSX:
+			- Made screen saver work on 10.6 again.
 2.41  18-Mar-2014	OSX:
 			- Fixed start-up rotation and credits display on iOS 7.
                         - Suppress status bar (again) on iOS 7.
@@ -78,12 +121,14 @@ You don't really have to "build" it, because it's all Javascript!
 			  builds are impossible, and Intel is now required.
 2.35  18-Aug-2010	All platforms:
 			- Regenerated font images for smoother animation.
+			X11:
+			- That means that there are 4 builtin fonts now
+			  instead of 5, and they are slightly larger.
+			- Turned on -cycle by default.
 			iPhone, iPad:
 			- Higher resolution display (and icons) on iPhone 4.
 			- Fixed a display glitch when zooming.
 			- Fixed an occasional rotation twitch on iPad.
-			X11:
-			- Turned on -cycle by default.
 2.34  19-May-2010	iPhone:
 			- When docked, don't automatically turn screen off.
 			- Briefly display the date every minute or so.

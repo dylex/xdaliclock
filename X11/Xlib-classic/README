@@ -1,0 +1,13 @@
+
+                              Dali Clock
+                          by Jamie Zawinski
+
+                    https://www.jwz.org/xdaliclock/
+
+This is jwz's original 1991 version of XDaliClock, last substantially modified
+circa 1997.  It is highly tuned for the machines of the Twentieth Century, so
+if you have a 386 or are running X protocol over a 28.8kbps modem, this is the
+version for you!
+
+The parent directory contains a more modern, OpenGL-based implementation.
+

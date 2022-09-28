@@ -1,2 +1,2 @@
 static const char version[] =
-	"@(#)XDaliClock 2.41 (18-Mar-2014), by Jamie Zawinski (jwz@jwz.org)";
+	"@(#)XDaliClock 2.47 (09-Sep-2022), by Jamie Zawinski (jwz@jwz.org)";

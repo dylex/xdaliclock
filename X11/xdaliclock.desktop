@@ -1,0 +1,13 @@
+[Desktop Entry]
+Exec=xdaliclock
+Icon=xdaliclock
+Name=XDaliClock
+Name[be]=XDaliClock
+Name[ca]=XDaliClock
+Name[el]=XDaliClock
+Name[lt]=XDaliClock
+Name[tr]=XDaliClock
+Comment=XDaliClock: melting digital clock
+Type=Application
+Categories=Clock;Utility;Office
+Terminal=false

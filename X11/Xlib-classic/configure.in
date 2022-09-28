@@ -1,7 +1,7 @@
 # configure.in --- xdaliclock, Copyright (c) 1999 Jamie Zawinski.
 #
 
-AC_INIT(../font/zeroG.xbm)
+AC_INIT(../../font/zeroG.xbm)
 AC_CONFIG_HEADER(config.h)
 
 echo "current directory: `pwd`"
@@ -11,7 +11,7 @@ echo "command line was: $0 $@"
 # check for some random other file that come later in the tar file,
 # to make sure everything is here.
 #
-f=$srcdir/../font/zeroG.xbm
+f=$srcdir/../../font/zeroG.xbm
 if test \! -r $f ; then
   echo ""
   echo "ERROR: The package is incomplete: $f does not exist."
@@ -59,7 +59,7 @@ AC_DEFUN(AC_PROG_CC_ANSI,
      AC_MSG_RESULT(yes),
      AC_MSG_RESULT(no)
      AC_MSG_ERROR(Couldn't build even a trivial ANSI C program: check CC.),
-     AC_MSG_ERROR(Couldn't build even a trivial ANSI C program: check CC.))
+     AC_MSG_RESULT(cross compiling... asssuming yes))
 
   if test -n "$GCC"; then
     AC_MSG_RESULT(Turning on gcc compiler warnings.)
