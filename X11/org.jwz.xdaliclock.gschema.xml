@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema path="/org/jwz/xdaliclock/" id="org.jwz.xdaliclock">
+    <key name="timemode" type="s">
+      <summary>Time format</summary>
+      <choices>
+        <choice value='HHMMSS'/>
+        <choice value='HHMM'/>
+        <choice value='SS'/>
+      </choices>
+      <default>'HHMMSS'</default>
+      <description>How to format the time.</description>
+    </key>
+    <key name="hourmode" type="s">
+      <summary>Hour Style</summary>
+      <choices>
+        <choice value='12'/>
+        <choice value='24'/>
+      </choices>
+      <default>'12'</default>
+      <description>12 or 24 hour mode.</description>
+    </key>
+    <key name="datemode" type="s">
+      <summary>Date format</summary>
+      <choices>
+        <choice value='MMDDYY'/>
+        <choice value='DDMMYY'/>
+        <choice value='YYMMDD'/>
+      </choices>
+      <default>'MMDDYY'</default>
+      <description>How to format the date.</description>
+    </key>
+    <key name="cyclespeed" type="i">
+      <summary>Color cycle speed</summary>
+      <default>15</default>
+      <description>The speed of color cycling.</description>
+    </key>
+    <key name="foreground" type="s">
+      <summary>Foreground color</summary>
+      <default>'#0000FF'</default>
+      <description>Foreground color.</description>
+    </key>
+    <key name="background" type="s">
+      <summary>Background color</summary>
+<!--  <default>'#00B3B355'</default> -->
+      <default>'#00B3B3FF'</default>
+      <description>Background color.</description>
+    </key>
+    <key name="windowopacity" type="d">
+      <summary>Opacity</summary>
+      <default>1.0</default>
+      <description>Window opacity.</description>
+    </key>
+    <key name="countdownmode" type="b">
+      <summary>Countdown mode</summary>
+      <default>false</default>
+      <description>Whether to count down.</description>
+    </key>
+    <key name="countdowntime" type="s">
+      <summary>Countdown time</summary>
+      <default>'2038-01-19 03:14:07'</default>
+      <description>The time to count down to.</description>
+    </key>
+    <key name="countdownseconds" type="b">
+      <summary>Countdown seconds only</summary>
+      <default>true</default>
+      <description>Whether to go to second-only mode in the countdown home stretch.</description>
+    </key>
+    <key name="geometry" type="s">
+      <summary>Window geometry</summary>
+      <default>''</default>
+      <description>The default size and position of the window.</description>
+    </key>
+    <key name="hidetitlebar" type="b">
+      <summary>Hide window title bar</summary>
+      <default>true</default>
+      <description>Whether to hide the window title bar.</description>
+    </key>
+  </schema>
+</schemalist>

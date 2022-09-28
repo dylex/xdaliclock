@@ -51,9 +51,9 @@ X_EXTRA_LIBS	= @X_EXTRA_LIBS@
 
 
 DEFINES		= $(DEFS)
-INCLUDES_1	= -I. -I$(srcdir) -I$(srcdir)/..
+INCLUDES_1	= -I. -I$(srcdir) -I$(srcdir)/../..
 INCLUDES	= $(INCLUDES_1) @INCLUDES@
-NUM_INC		= -I$(srcdir)/../font
+NUM_INC		= -I$(srcdir)/../../font
 
 SRCS		= xdaliclock.c digital.c colors.c resources.c \
 		  visual.c overlay.c hsv.c usleep.c
@@ -63,11 +63,11 @@ OBJS		= xdaliclock.o digital.o colors.o resources.o \
 CLOCK_LIBS	= $(LIBS) $(X_LIBS) \
 		  $(X_PRE_LIBS) -lXt -lX11 -lXext $(X_EXTRA_LIBS)
 
-TARFILES	= configure configure.in Makefile.in config.h.in \
+TARFILES	= README configure configure.in Makefile.in config.h.in \
 		  xdaliclock.man xdaliclock.spec $(SRCS) \
 		  xdaliclock.h resources.h visual.h usleep.h \
-		  hsv.h vroot.h ad2c XDaliClock.ad XDaliClock_ad.h
-
+		  hsv.h vroot.h ad2c XDaliClock.ad XDaliClock_ad.h \
+		  config.sub config.guess install-sh
 
 all: xdaliclock
 
@@ -177,7 +177,7 @@ xdaliclock.hlp: xdaliclock.man
 
 update_spec_version::
 	@S=xdaliclock.spec ;						    \
-	V=`sed -n 's/.*\([0-9][0-9]*\.[0-9]*\).*/\1/p' < ../version.h` ;    \
+	V=`sed -n 's/.*\([0-9][0-9]*\.[0-9]*\).*/\1/p' < ../../version.h` ; \
 	/bin/echo -n "Updating version number in $$S to \"$$V\"... " ;	    \
 	T=/tmp/xs.$$$$ ;						    \
 	sed "s/^\(Version:[^0-9]*\)\(.*\)/\1$$V/"			    \
@@ -192,7 +192,7 @@ update_spec_version::
 
 rpm:: update_spec_version
 	@								    \
-  VERS=`sed -n 's/[^0-9]*\([0-9]\.[0-9][0-9]*\).*/\1/p' ../version.h` ;	    \
+  VERS=`sed -n 's/[^0-9]*\([0-9]\.[0-9][0-9]*\).*/\1/p' ../../version.h` ;  \
   cp -p xdaliclock-$$VERS.tar.gz /usr/src/redhat/SOURCES/ ;		    \
   rpm -ba xdaliclock.spec
 
@@ -205,7 +205,7 @@ rpm:: update_spec_version
 xdaliclock.o: config.h
 xdaliclock.o: $(srcdir)/xdaliclock.h
 xdaliclock.o: $(srcdir)/vroot.h
-xdaliclock.o: $(srcdir)/../version.h
+xdaliclock.o: $(srcdir)/../../version.h
 xdaliclock.o: $(srcdir)/resources.h
 xdaliclock.o: $(srcdir)/visual.h
 xdaliclock.o: XDaliClock_ad.h
@@ -214,66 +214,66 @@ digital.o: $(srcdir)/xdaliclock.h
 digital.o: $(srcdir)/resources.h
 digital.o: $(srcdir)/usleep.h
 digital.o: $(srcdir)/vroot.h
-digital.o: $(srcdir)/../font/zeroB.xbm
-digital.o: $(srcdir)/../font/oneB.xbm
-digital.o: $(srcdir)/../font/twoB.xbm
-digital.o: $(srcdir)/../font/threeB.xbm
-digital.o: $(srcdir)/../font/fourB.xbm
-digital.o: $(srcdir)/../font/fiveB.xbm
-digital.o: $(srcdir)/../font/sixB.xbm
-digital.o: $(srcdir)/../font/sevenB.xbm
-digital.o: $(srcdir)/../font/eightB.xbm
-digital.o: $(srcdir)/../font/nineB.xbm
-digital.o: $(srcdir)/../font/colonB.xbm
-digital.o: $(srcdir)/../font/slashB.xbm
-digital.o: $(srcdir)/../font/zeroC.xbm
-digital.o: $(srcdir)/../font/oneC.xbm
-digital.o: $(srcdir)/../font/twoC.xbm
-digital.o: $(srcdir)/../font/threeC.xbm
-digital.o: $(srcdir)/../font/fourC.xbm
-digital.o: $(srcdir)/../font/fiveC.xbm
-digital.o: $(srcdir)/../font/sixC.xbm
-digital.o: $(srcdir)/../font/sevenC.xbm
-digital.o: $(srcdir)/../font/eightC.xbm
-digital.o: $(srcdir)/../font/nineC.xbm
-digital.o: $(srcdir)/../font/colonC.xbm
-digital.o: $(srcdir)/../font/slashC.xbm
-digital.o: $(srcdir)/../font/zeroD.xbm
-digital.o: $(srcdir)/../font/oneD.xbm
-digital.o: $(srcdir)/../font/twoD.xbm
-digital.o: $(srcdir)/../font/threeD.xbm
-digital.o: $(srcdir)/../font/fourD.xbm
-digital.o: $(srcdir)/../font/fiveD.xbm
-digital.o: $(srcdir)/../font/sixD.xbm
-digital.o: $(srcdir)/../font/sevenD.xbm
-digital.o: $(srcdir)/../font/eightD.xbm
-digital.o: $(srcdir)/../font/nineD.xbm
-digital.o: $(srcdir)/../font/colonD.xbm
-digital.o: $(srcdir)/../font/slashD.xbm
-digital.o: $(srcdir)/../font/zeroE.xbm
-digital.o: $(srcdir)/../font/oneE.xbm
-digital.o: $(srcdir)/../font/twoE.xbm
-digital.o: $(srcdir)/../font/threeE.xbm
-digital.o: $(srcdir)/../font/fourE.xbm
-digital.o: $(srcdir)/../font/fiveE.xbm
-digital.o: $(srcdir)/../font/sixE.xbm
-digital.o: $(srcdir)/../font/sevenE.xbm
-digital.o: $(srcdir)/../font/eightE.xbm
-digital.o: $(srcdir)/../font/nineE.xbm
-digital.o: $(srcdir)/../font/colonE.xbm
-digital.o: $(srcdir)/../font/slashE.xbm
-digital.o: $(srcdir)/../font/zeroF.xbm
-digital.o: $(srcdir)/../font/oneF.xbm
-digital.o: $(srcdir)/../font/twoF.xbm
-digital.o: $(srcdir)/../font/threeF.xbm
-digital.o: $(srcdir)/../font/fourF.xbm
-digital.o: $(srcdir)/../font/fiveF.xbm
-digital.o: $(srcdir)/../font/sixF.xbm
-digital.o: $(srcdir)/../font/sevenF.xbm
-digital.o: $(srcdir)/../font/eightF.xbm
-digital.o: $(srcdir)/../font/nineF.xbm
-digital.o: $(srcdir)/../font/colonF.xbm
-digital.o: $(srcdir)/../font/slashF.xbm
+digital.o: $(srcdir)/../../font/zeroB.xbm
+digital.o: $(srcdir)/../../font/oneB.xbm
+digital.o: $(srcdir)/../../font/twoB.xbm
+digital.o: $(srcdir)/../../font/threeB.xbm
+digital.o: $(srcdir)/../../font/fourB.xbm
+digital.o: $(srcdir)/../../font/fiveB.xbm
+digital.o: $(srcdir)/../../font/sixB.xbm
+digital.o: $(srcdir)/../../font/sevenB.xbm
+digital.o: $(srcdir)/../../font/eightB.xbm
+digital.o: $(srcdir)/../../font/nineB.xbm
+digital.o: $(srcdir)/../../font/colonB.xbm
+digital.o: $(srcdir)/../../font/slashB.xbm
+digital.o: $(srcdir)/../../font/zeroC.xbm
+digital.o: $(srcdir)/../../font/oneC.xbm
+digital.o: $(srcdir)/../../font/twoC.xbm
+digital.o: $(srcdir)/../../font/threeC.xbm
+digital.o: $(srcdir)/../../font/fourC.xbm
+digital.o: $(srcdir)/../../font/fiveC.xbm
+digital.o: $(srcdir)/../../font/sixC.xbm
+digital.o: $(srcdir)/../../font/sevenC.xbm
+digital.o: $(srcdir)/../../font/eightC.xbm
+digital.o: $(srcdir)/../../font/nineC.xbm
+digital.o: $(srcdir)/../../font/colonC.xbm
+digital.o: $(srcdir)/../../font/slashC.xbm
+digital.o: $(srcdir)/../../font/zeroD.xbm
+digital.o: $(srcdir)/../../font/oneD.xbm
+digital.o: $(srcdir)/../../font/twoD.xbm
+digital.o: $(srcdir)/../../font/threeD.xbm
+digital.o: $(srcdir)/../../font/fourD.xbm
+digital.o: $(srcdir)/../../font/fiveD.xbm
+digital.o: $(srcdir)/../../font/sixD.xbm
+digital.o: $(srcdir)/../../font/sevenD.xbm
+digital.o: $(srcdir)/../../font/eightD.xbm
+digital.o: $(srcdir)/../../font/nineD.xbm
+digital.o: $(srcdir)/../../font/colonD.xbm
+digital.o: $(srcdir)/../../font/slashD.xbm
+digital.o: $(srcdir)/../../font/zeroE.xbm
+digital.o: $(srcdir)/../../font/oneE.xbm
+digital.o: $(srcdir)/../../font/twoE.xbm
+digital.o: $(srcdir)/../../font/threeE.xbm
+digital.o: $(srcdir)/../../font/fourE.xbm
+digital.o: $(srcdir)/../../font/fiveE.xbm
+digital.o: $(srcdir)/../../font/sixE.xbm
+digital.o: $(srcdir)/../../font/sevenE.xbm
+digital.o: $(srcdir)/../../font/eightE.xbm
+digital.o: $(srcdir)/../../font/nineE.xbm
+digital.o: $(srcdir)/../../font/colonE.xbm
+digital.o: $(srcdir)/../../font/slashE.xbm
+digital.o: $(srcdir)/../../font/zeroF.xbm
+digital.o: $(srcdir)/../../font/oneF.xbm
+digital.o: $(srcdir)/../../font/twoF.xbm
+digital.o: $(srcdir)/../../font/threeF.xbm
+digital.o: $(srcdir)/../../font/fourF.xbm
+digital.o: $(srcdir)/../../font/fiveF.xbm
+digital.o: $(srcdir)/../../font/sixF.xbm
+digital.o: $(srcdir)/../../font/sevenF.xbm
+digital.o: $(srcdir)/../../font/eightF.xbm
+digital.o: $(srcdir)/../../font/nineF.xbm
+digital.o: $(srcdir)/../../font/colonF.xbm
+digital.o: $(srcdir)/../../font/slashF.xbm
 colors.o: config.h
 colors.o: $(srcdir)/xdaliclock.h
 colors.o: $(srcdir)/resources.h

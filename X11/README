@@ -1,0 +1,15 @@
+
+                              Dali Clock
+                          by Jamie Zawinski
+
+                    https://www.jwz.org/xdaliclock/
+
+Written in 2022, this version uses GTK 3 and OpenGL.  Improvements over the
+Xlib Classic version are:
+
+  - Fonts are scaled to fill the window.
+  - Animation is anti-aliased.
+  - Has a GUI preferences panel.
+  - Remembers last window size and position.
+  - Countdown mode.
+

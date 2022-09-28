@@ -1,5 +1,5 @@
 /* xdaliclock - a melting digital clock
- * Copyright (c) 1991-2006 Jamie Zawinski <jwz@jwz.org>
+ * Copyright (c) 1991-2014 Jamie Zawinski <jwz@jwz.org>
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that

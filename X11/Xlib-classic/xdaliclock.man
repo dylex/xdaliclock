@@ -326,7 +326,7 @@ The correct default datemode should be extracted from the current locale.
 Should have a \fI-analog\fP mode (maybe someday...)
 .SH UPGRADES
 The latest version can always be found at 
-http://www.jwz.org/xdaliclock/
+https://www.jwz.org/xdaliclock/
 
 There is a version of this program for PalmOS available there as well.
 .SH "SEE ALSO"

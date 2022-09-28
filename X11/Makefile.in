@@ -1,0 +1,325 @@
+# Makefile.in --- xdaliclock, Copyright © 1991-2022 Jamie Zawinski.
+
+@SET_MAKE@
+.SUFFIXES:
+.SUFFIXES: .c .o
+
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+install_prefix	=
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+bindir		= @bindir@
+mandir		= @mandir@
+man1dir		= $(mandir)/man1
+datarootdir	= @datarootdir@
+datadir		= @datadir@
+mansuffix	= 1
+
+CC		= @CC@
+CFLAGS		= @CFLAGS@
+WARN		= -Wall -pedantic -Wno-overlength-strings
+LDFLAGS		= @LDFLAGS@
+DEFS		= @DEFS@
+LIBS		= @LIBS@ $(GTK_LIBS) $(OPENGL_LIBS) $(XLIB_LIBS)
+
+GTK_CFLAGS	= @GTK_CFLAGS@
+GTK_LIBS	= @GTK_LIBS@
+OPENGL_CFLAGS	= @OPENGL_CFLAGS@
+OPENGL_LIBS	= @OPENGL_LIBS@
+XLIB_CFLAGS	= @XLIB_CFLAGS@
+XLIB_LIBS	= @XLIB_LIBS@
+GLIB_COMPILE_RESOURCES = @GLIB_COMPILE_RESOURCES@
+GLIB_COMPILE_SCHEMAS   = @GLIB_COMPILE_SCHEMAS@
+
+GTK_APPDIR	= $(datadir)/applications
+GTK_ICONDIR	= $(datadir)/pixmaps
+SCHEMA_DIR	= ${datadir}/glib-2.0/schemas
+UPDATE_ICON_CACHE = gtk-update-icon-cache
+
+DEPEND		= makedepend
+DEPEND_FLAGS	= 
+DEPEND_DEFINES	= 
+
+SHELL		= /bin/sh
+INSTALL		= @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA    = $(INSTALL)
+
+DEFINES		= $(DEFS)
+INCLUDES_1	= -I. -I$(srcdir) -I$(srcdir)/..
+INCLUDES	= $(INCLUDES_1) @INCLUDES@
+NUM_INC		= -I$(srcdir)/../font
+
+# Using $(MAKE) directly means the shell executes things even with "make -n"
+MAKE2 = $(MAKE)
+
+SRCS		= xdaliclock.c window.c prefs.c hsv.c digital.c
+HDRS		= xdaliclock.h window.h prefs.h hsv.h app.h vroot.h
+OBJS		= xdaliclock.o window.o prefs.o hsv.o digital.o \
+		  resources.o
+LOGO		= xdaliclock.png
+DESK		= xdaliclock.desktop
+
+SCHEMA		= org.jwz.xdaliclock.gschema.xml
+TARFILES	= README configure configure.ac Makefile.in config.h.in \
+		  xdaliclock.man $(SRCS) $(HDRS) $(LOGO) $(DESK) $(SCHEMA) \
+		  window.ui prefs.ui gresource.xml aclocal.m4 install-sh
+
+all: xdaliclock
+
+
+# Compile the XML preferences schema to a binary blob usable by GSettings.
+# Output file name "gschemas.compiled" is hardcoded in "glib-compile-schemas".
+# Input files are anything that matches "*.gschema.xml".
+#
+gschemas.compiled: $(SCHEMA)
+	$(GLIB_COMPILE_SCHEMAS) --strict .
+
+# Compile the XML UI descriptions to embeddable C code.
+#
+resources.c: gresource.xml window.ui prefs.ui
+	$(GLIB_COMPILE_RESOURCES) gresource.xml \
+	  --target=$@ --sourcedir=$(srcdir) --generate-source
+
+
+install:   install-program   install-schema   install-man   install-gnome
+uninstall: uninstall-program uninstall-schema uninstall-man uninstall-gnome
+
+install-strip:
+	$(MAKE2) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
+
+$(install_prefix)$(bindir)	\
+$(install_prefix)$(man1dir)	\
+$(install_prefix)$(GTK_APPDIR)	\
+$(install_prefix)$(GTK_ICONDIR)	\
+$(install_prefix)$(SCHEMA_DIR):
+	mkdir -p $@
+
+install-program: xdaliclock $(install_prefix)$(bindir)
+	$(INSTALL_PROGRAM) $< $(install_prefix)$(bindir)/xdaliclock
+
+# If /usr/share/glib-2.0/schemas/org.jwz.xdaliclock.gschema.xml" does
+# not exist, the app won't launch. This is an amazing design. Spectacular.
+# No notes.
+#
+install-schema: $(SCHEMA) $(install_prefix)$(SCHEMA_DIR)
+	$(INSTALL_DATA) $< $(install_prefix)$(SCHEMA_DIR)/
+	$(GLIB_COMPILE_SCHEMAS) $(install_prefix)$(SCHEMA_DIR)
+
+# /usr/share/pixmaps/xdaliclock.png
+install-gnome:: $(LOGO) $(install_prefix)$(GTK_ICONDIR)
+	$(INSTALL_DATA) $< $(install_prefix)$(GTK_ICONDIR)/
+
+# /usr/share/applications/xdaliclock.desktop
+install-gnome:: $(DESK) $(install_prefix)$(GTK_APPDIR)
+	$(INSTALL_DATA) $< $(install_prefix)$(GTK_APPDIR)/
+
+# /usr/share/pixmaps/index.theme
+install-gnome:: update-icon-caches
+update-icon-caches::
+	@\
+  for f in $(install_prefix)$(datadir)/icons/index.theme		\
+	   $(install_prefix)$(datadir)/icons/*/index.theme		\
+	   $(install_prefix)$(datadir)/pixmaps/index.theme		\
+	   $(install_prefix)$(datadir)/pixmaps/*/index.theme ; do	\
+    if [ -f $$f ]; then							\
+      f=`dirname $$f` ;							\
+      echo $(UPDATE_ICON_CACHE) --force --quiet $$f ;			\
+           $(UPDATE_ICON_CACHE) --force --quiet $$f ;			\
+    fi ;								\
+  done
+
+install-man: xdaliclock.man $(install_prefix)$(man1dir)
+	$(INSTALL_DATA) $< $(install_prefix)$(man1dir)/xdaliclock.$(mansuffix)
+
+
+uninstall-program:
+	rm -f $(install_prefix)$(bindir)/xdaliclock
+
+uninstall-schema:
+	rm -f $(install_prefix)$(SCHEMA_DIR)/$(SCHEMA)
+	! [ -d $(install_prefix)$(SCHEMA_DIR) ] || \
+	$(GLIB_COMPILE_SCHEMAS) $(install_prefix)$(SCHEMA_DIR)
+
+uninstall-gnome::
+	rm -f $(install_prefix)$(GTK_ICONDIR)/$(LOGO)
+	rm -f $(install_prefix)$(GTK_APPDIR)/$(DESK)
+
+uninstall-man:
+	rm -f $(install_prefix)$(man1dir)/xdaliclock.$(mansuffix)
+
+
+clean:
+	-rm -f *.o a.out core xdaliclock
+	-rm gschemas.compiled resources.c
+
+distclean: clean
+	-rm -f config.h Makefile config.status config.cache config.log \
+	  *.bak *.rej TAGS *~ "#"*
+	-rm -rf autom4te.cache
+
+configure::
+	rm -f configure
+	aclocal
+	autoconf
+	autoheader
+
+automake-upgrade::
+	cp -p /opt/local/share/automake*/install-sh .
+	$(MAKE2) configure
+#	cp -p /opt/local/share/automake*/{config.guess,config.sub} .
+#	cp -p /opt/local/share/libtool/aclocal.m4 .
+
+
+# Adds all current dependencies to Makefile
+depend:
+	$(DEPEND) -s '# DO NOT DELETE: updated by make depend'		    \
+	$(DEPEND_FLAGS) --						    \
+	$(INCLUDES) $(DEFINES) $(NUM_INC) $(DEPEND_DEFINES) $(CFLAGS)	    \
+	   -- $(SRCS)
+
+# Adds some dependencies to Makefile.in -- not totally accurate, but pretty
+# close.  This excludes dependencies on files in /usr/include, etc.  It tries
+# to include only dependencies on files which are themselves a part of this
+# package.
+distdepend:
+	@echo updating dependencies in `pwd`/Makefile.in... ;		    \
+	$(DEPEND) -w 0 -f - 						    \
+	-s '# DO NOT DELETE: updated by make distdepend' $(DEPEND_FLAGS) -- \
+	$(INCLUDES_1) $(DEFINES) $(NUM_INC) $(DEPEND_DEFINES) $(CFLAGS)	    \
+	  -- $(SRCS) |							    \
+	(								    \
+	  awk '/^# .*Makefile.in ---/,/^# DO .*distdepend/' < Makefile.in ; \
+	  sed -e 's/^\(#.*\)/\1/'					    \
+	      -e 's@ \./@ @g;s@ /[^ ]*@@g;/^.*:$$/d'			    \
+	      -e 's@ \([^$$]\)@ $$(srcdir)/\1@g'			    \
+	      -e 's@ $$(srcdir)/\(.*config\.h\)@ \1@g'			    \
+	      -e 's@^# $$(srcdir)/DO .*@@' ;		 		    \
+	  echo ''							    \
+	) > /tmp/distdepend.$$$$ &&					    \
+	mv Makefile.in Makefile.in.bak &&				    \
+	mv /tmp/distdepend.$$$$ Makefile.in
+
+TAGS: tags
+tags:
+	find $(srcdir) -name '*.[chly]' -print | xargs etags -a
+
+echo_tarfiles:
+	@echo $(TARFILES)
+
+
+IDC = $(INCLUDES) $(DEFINES) $(WARN) $(CFLAGS)
+.c.o:
+	$(CC) -c $(IDC) $(GTK_CFLAGS) $<
+
+window.o: window.c
+	$(CC) -c $(IDC) $(GTK_CFLAGS) $(OPENGL_CFLAGS) $(XLIB_CFLAGS) $<
+
+digital.o: digital.c
+	$(CC) -c $(IDC) $(NUM_INC) $<
+
+xdaliclock: $(OBJS) gschemas.compiled
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+
+
+#############################################################################
+# DO NOT DELETE: updated by make distdepend
+
+
+xdaliclock.o: config.h
+xdaliclock.o: $(srcdir)/../version.h
+xdaliclock.o: $(srcdir)/app.h
+xdaliclock.o: $(srcdir)/xdaliclock.h
+xdaliclock.o: $(srcdir)/window.h
+xdaliclock.o: $(srcdir)/prefs.h
+window.o: config.h
+window.o: $(srcdir)/window.h
+window.o: $(srcdir)/app.h
+window.o: $(srcdir)/xdaliclock.h
+window.o: $(srcdir)/prefs.h
+window.o: $(srcdir)/hsv.h
+prefs.o: config.h
+prefs.o: $(srcdir)/prefs.h
+prefs.o: $(srcdir)/window.h
+prefs.o: $(srcdir)/app.h
+prefs.o: $(srcdir)/xdaliclock.h
+prefs.o: $(srcdir)/../version.h
+hsv.o: config.h
+hsv.o: $(srcdir)/hsv.h
+digital.o: config.h
+digital.o: $(srcdir)/xdaliclock.h
+digital.o: $(srcdir)/../font/zeroA.xbm
+digital.o: $(srcdir)/../font/oneA.xbm
+digital.o: $(srcdir)/../font/twoA.xbm
+digital.o: $(srcdir)/../font/threeA.xbm
+digital.o: $(srcdir)/../font/fourA.xbm
+digital.o: $(srcdir)/../font/fiveA.xbm
+digital.o: $(srcdir)/../font/sixA.xbm
+digital.o: $(srcdir)/../font/sevenA.xbm
+digital.o: $(srcdir)/../font/eightA.xbm
+digital.o: $(srcdir)/../font/nineA.xbm
+digital.o: $(srcdir)/../font/colonA.xbm
+digital.o: $(srcdir)/../font/slashA.xbm
+digital.o: $(srcdir)/../font/zeroB.xbm
+digital.o: $(srcdir)/../font/oneB.xbm
+digital.o: $(srcdir)/../font/twoB.xbm
+digital.o: $(srcdir)/../font/threeB.xbm
+digital.o: $(srcdir)/../font/fourB.xbm
+digital.o: $(srcdir)/../font/fiveB.xbm
+digital.o: $(srcdir)/../font/sixB.xbm
+digital.o: $(srcdir)/../font/sevenB.xbm
+digital.o: $(srcdir)/../font/eightB.xbm
+digital.o: $(srcdir)/../font/nineB.xbm
+digital.o: $(srcdir)/../font/colonB.xbm
+digital.o: $(srcdir)/../font/slashB.xbm
+digital.o: $(srcdir)/../font/zeroC.xbm
+digital.o: $(srcdir)/../font/oneC.xbm
+digital.o: $(srcdir)/../font/twoC.xbm
+digital.o: $(srcdir)/../font/threeC.xbm
+digital.o: $(srcdir)/../font/fourC.xbm
+digital.o: $(srcdir)/../font/fiveC.xbm
+digital.o: $(srcdir)/../font/sixC.xbm
+digital.o: $(srcdir)/../font/sevenC.xbm
+digital.o: $(srcdir)/../font/eightC.xbm
+digital.o: $(srcdir)/../font/nineC.xbm
+digital.o: $(srcdir)/../font/colonC.xbm
+digital.o: $(srcdir)/../font/slashC.xbm
+digital.o: $(srcdir)/../font/zeroD.xbm
+digital.o: $(srcdir)/../font/oneD.xbm
+digital.o: $(srcdir)/../font/twoD.xbm
+digital.o: $(srcdir)/../font/threeD.xbm
+digital.o: $(srcdir)/../font/fourD.xbm
+digital.o: $(srcdir)/../font/fiveD.xbm
+digital.o: $(srcdir)/../font/sixD.xbm
+digital.o: $(srcdir)/../font/sevenD.xbm
+digital.o: $(srcdir)/../font/eightD.xbm
+digital.o: $(srcdir)/../font/nineD.xbm
+digital.o: $(srcdir)/../font/colonD.xbm
+digital.o: $(srcdir)/../font/slashD.xbm
+digital.o: $(srcdir)/../font/zeroE.xbm
+digital.o: $(srcdir)/../font/oneE.xbm
+digital.o: $(srcdir)/../font/twoE.xbm
+digital.o: $(srcdir)/../font/threeE.xbm
+digital.o: $(srcdir)/../font/fourE.xbm
+digital.o: $(srcdir)/../font/fiveE.xbm
+digital.o: $(srcdir)/../font/sixE.xbm
+digital.o: $(srcdir)/../font/sevenE.xbm
+digital.o: $(srcdir)/../font/eightE.xbm
+digital.o: $(srcdir)/../font/nineE.xbm
+digital.o: $(srcdir)/../font/colonE.xbm
+digital.o: $(srcdir)/../font/slashE.xbm
+digital.o: $(srcdir)/../font/zeroF.xbm
+digital.o: $(srcdir)/../font/oneF.xbm
+digital.o: $(srcdir)/../font/twoF.xbm
+digital.o: $(srcdir)/../font/threeF.xbm
+digital.o: $(srcdir)/../font/fourF.xbm
+digital.o: $(srcdir)/../font/fiveF.xbm
+digital.o: $(srcdir)/../font/sixF.xbm
+digital.o: $(srcdir)/../font/sevenF.xbm
+digital.o: $(srcdir)/../font/eightF.xbm
+digital.o: $(srcdir)/../font/nineF.xbm
+digital.o: $(srcdir)/../font/colonF.xbm
+digital.o: $(srcdir)/../font/slashF.xbm
+

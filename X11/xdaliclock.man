@@ -1,0 +1,81 @@
+.TH XDaliClock 1 "25-Aug-2022 (2.45)" "X Version 11"
+.SH NAME
+xdaliclock - melting digital clock
+.SH SYNOPSIS
+.B xdaliclock
+.SH DESCRIPTION
+The \fIxdaliclock\fP program displays a digital clock; when a digit
+changes, it melts into its new shape.
+
+This program was inspired by the Alto and Macintosh programs of the same
+name, written by Steve Capps in 1983 or 1984.
+.SH COMMAND-LINE OPTIONS
+.TP 4
+.B \-\-display\fP \fIhost:display.screen\fP
+The X display to use.
+.TP 4
+.B \-\-version
+Print the version number and exit.
+.TP 4
+.B \-\-root
+Render on the root window instead of opening an application window.
+.TP 4
+.B \-\-window\-id \fInumber\fP
+Render on an existing X11 Window instead of its own window.
+.SH GESTURES
+.TP 4
+.B Single click
+Display the date.  It will also be briefly shown about once a minute.
+.TP 4
+.B Double click
+Switch between 12-hour and 24-hour mode.
+.TP 4
+.B Right click
+Open the preferences dialog.
+.TP 4
+.B Left arrow or down arrow keys
+Reduce the number of digits shown (e.g. HH:MM:SS to HH:MM).
+.TP 4
+.B Right arrow or up arrow keys
+Increase the number of digits shown (e.g. HH:MM to HH:MM:SS).
+.SH PREFERENCES
+.TP 4
+.B Date & Time
+How to format the date and time, and how many digits to use.
+.TP 4
+.B Colors
+The starting foreground and background colors, and how quickly to
+cycle their hues.
+.TP 4
+.B Countdown timer
+To count down to (and then up from) a target time, enter it in the
+form \fI"YYYY-MM-DD HH:MM:SS"\fP.  If the \fI"Seconds only in home stretch"\fP
+box is checked, the display will switch to a seconds-only display 30 seconds
+before the target.
+.SH ENVIRONMENT
+.B DISPLAY
+to get the default host and display number.
+.TP 8
+.B XSCREENSAVER_WINDOW
+The window ID to use with \fI\-\-root\fP.
+.TP 8
+.B GSETTINGS_SCHEMA_DIR
+Where preferences and defaults are stored.
+.SH UPGRADES
+The latest version can be found at https://www.jwz.org/xdaliclock/
+
+There are also version of this program there for macOS, iOS, Android
+and others.
+.SH COPYRIGHT
+Copyright \(co 1991-2022 by Jamie Zawinski.
+Permission to use, copy, modify, distribute, and sell this software
+and its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation.  No representations are made about the
+suitability of this software for any purpose.  It is provided "as is"
+without express or implied warranty.
+.SH AUTHOR
+Jamie Zawinski <jwz@jwz.org>, 18-sep-91.
+
+Based on a concept by Steve Capps.
