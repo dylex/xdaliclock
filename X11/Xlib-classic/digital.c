@@ -691,12 +691,14 @@ static time_t
 current_clock (void)
 {
   struct timeval tv;
-  struct tm *tp;
   if (gettimeofday(&tv, NULL) == -1)
     exit(-1);
-  tp = localtime(&tv.tv_sec);
-  tv.tv_sec += tp->tm_gmtoff;
-  tv.tv_sec %= 24*60*60;
+  if (!countdown) {
+    struct tm *tp;
+    tp = localtime(&tv.tv_sec);
+    tv.tv_sec += tp->tm_gmtoff;
+    tv.tv_sec %= 24*60*60;
+  }
   return hex_time ? (512 * tv.tv_sec + 8 * tv.tv_usec / 15625) / 675 : tv.tv_sec;
 }
 
